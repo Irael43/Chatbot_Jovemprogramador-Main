@@ -1,0 +1,10 @@
+# ==== BACKEND (Flask + Gemini AI) ====
+Flask==3.0.3
+Flask-Cors==4.0.0
+python-dotenv==1.0.1
+google-generativeai==0.8.5
+requests==2.32.3
+beautifulsoup4==4.12.3
+
+# ==== FRONTEND (Streamlit) ====
+streamlit==1.39.0
