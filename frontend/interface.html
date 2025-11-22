@@ -1005,6 +1005,528 @@
           new VLibras.Widget("https://vlibras.gov.br/app");
         }
 
+        // ✅ ADICIONADO: Configuração da URL do backend
+        const BACKEND_URL = 'http://127.0.0.1:5000'; // Para desenvolvimento local
+
+        // Chat functionality
+        const chatMessages = document.getElementById("chatMessages");
+        const userInput = document.getElementById("userInput");
+        const sendButton = document.getElementById("sendButton");
+
+        // Language selector
+        const languageBtn = document.getElementById("languageBtn");
+        const languageDropdown = document.getElementById("languageDropdown");
+        const currentLanguage = document.getElementById("currentLanguage");
+
+        // Accessibility
+        const accessibilityBtn = document.getElementById("accessibilityBtn");
+        const accessibilityPanel =
+          document.getElementById("accessibilityPanel");
+        const vlibrasBtn = document.getElementById("vlibrasBtn");
+
+        // Translations
+        const translations = {
+          pt: {
+            hero_title: "Sua <span>Jornada</span> na Programação Começa Aqui",
+            hero_subtitle:
+              "Aprenda programação do zero ao avançado com nossa plataforma interativa. Cursos, projetos práticos e suporte da comunidade.",
+            cta_explore: "Explorar Cursos",
+            cta_learn_more: "Saiba Mais",
+            features_title: "O Que Oferecemos",
+            features_subtitle:
+              "Descubra todos os recursos que vão impulsionar sua carreira na programação",
+            feature1_title: "Cursos Completos",
+            feature1_desc:
+              "Aprenda com cursos estruturados do básico ao avançado em diversas tecnologias e linguagens de programação.",
+            feature2_title: "Projetos Práticos",
+            feature2_desc:
+              "Desenvolva projetos reais que vão compor seu portfólio e te preparar para o mercado de trabalho.",
+            feature3_title: "Comunidade Ativa",
+            feature3_desc:
+              "Participe de uma comunidade de milhares de estudantes e programadores para trocar experiências e conhecimentos.",
+            feature4_title: "Certificação",
+            feature4_desc:
+              "Receba certificados reconhecidos pelo mercado após a conclusão de cada curso e projeto.",
+            chat_title: "Chat IA - Jovem Programador",
+            chat_subtitle:
+              "Tire suas dúvidas sobre programação com nossa inteligência artificial especializada",
+            chat_header: "Assistente Virtual Jovem Programador",
+            chat_welcome:
+              "Olá! Sou o assistente do Jovem Programador. Como posso ajudar você hoje com suas dúvidas sobre programação?",
+            chat_placeholder: "Digite sua pergunta sobre programação...",
+            chat_send: "Enviar",
+            footer_title: "Jovem Programador",
+            footer_desc:
+              "Sua plataforma completa para aprender programação e desenvolver habilidades para o mercado de tecnologia.",
+            courses_title: "Cursos",
+            course1: "Desenvolvimento Web",
+            course2: "JavaScript",
+            course3: "Python",
+            course4: "React",
+            course5: "Node.js",
+            resources_title: "Recursos",
+            resource1: "Blog",
+            resource2: "Tutoriais",
+            resource3: "Projetos",
+            resource4: "Comunidade",
+            resource5: "Suporte",
+            contact_title: "Contato",
+            copyright:
+              "&copy; 2023 Jovem Programador. Todos os direitos reservados.",
+            accessibility_title: "Acessibilidade",
+            high_contrast: "Alto Contraste",
+            large_text: "Texto Grande",
+            vlibras_btn: "Ativar VLibras",
+          },
+          en: {
+            hero_title: "Your Programming <span>Journey</span> Starts Here",
+            hero_subtitle:
+              "Learn programming from zero to advanced with our interactive platform. Courses, practical projects and community support.",
+            cta_explore: "Explore Courses",
+            cta_learn_more: "Learn More",
+            features_title: "What We Offer",
+            features_subtitle:
+              "Discover all the resources that will boost your programming career",
+            feature1_title: "Complete Courses",
+            feature1_desc:
+              "Learn with structured courses from basic to advanced in various technologies and programming languages.",
+            feature2_title: "Practical Projects",
+            feature2_desc:
+              "Develop real projects that will compose your portfolio and prepare you for the job market.",
+            feature3_title: "Active Community",
+            feature3_desc:
+              "Join a community of thousands of students and programmers to exchange experiences and knowledge.",
+            feature4_title: "Certification",
+            feature4_desc:
+              "Receive market-recognized certificates after completing each course and project.",
+            chat_title: "AI Chat - Young Programmer",
+            chat_subtitle:
+              "Ask your programming questions with our specialized artificial intelligence",
+            chat_header: "Young Programmer Virtual Assistant",
+            chat_welcome:
+              "Hello! I'm the Young Programmer assistant. How can I help you today with your programming questions?",
+            chat_placeholder: "Type your programming question...",
+            chat_send: "Send",
+            footer_title: "Young Programmer",
+            footer_desc:
+              "Your complete platform to learn programming and develop skills for the technology market.",
+            courses_title: "Courses",
+            course1: "Web Development",
+            course2: "JavaScript",
+            course3: "Python",
+            course4: "React",
+            course5: "Node.js",
+            resources_title: "Resources",
+            resource1: "Blog",
+            resource2: "Tutorials",
+            resource3: "Projects",
+            resource4: "Community",
+            resource5: "Support",
+            contact_title: "Contact",
+            copyright: "&copy; 2023 Young Programmer. All rights reserved.",
+            accessibility_title: "Accessibility",
+            high_contrast: "High Contrast",
+            large_text: "Large Text",
+            vlibras_btn: "Activate VLibras",
+          },
+          es: {
+            hero_title: "Tu <span>Viaje</span> de Programación Comienza Aquí",
+            hero_subtitle:
+              "Aprende programación desde cero hasta avanzado con nuestra plataforma interactiva. Cursos, proyectos prácticos y soporte comunitario.",
+            cta_explore: "Explorar Cursos",
+            cta_learn_more: "Saber Más",
+            features_title: "Lo Que Ofrecemos",
+            features_subtitle:
+              "Descubre todos los recursos que impulsarán tu carrera en programación",
+            feature1_title: "Cursos Completos",
+            feature1_desc:
+              "Aprende con cursos estructurados desde básico hasta avanzado en varias tecnologías y lenguajes de programación.",
+            feature2_title: "Proyectos Prácticos",
+            feature2_desc:
+              "Desarrolla proyectos reales que compondrán tu portafolio y te prepararán para el mercado laboral.",
+            feature3_title: "Comunidad Activa",
+            feature3_desc:
+              "Únete a uma comunidad de miles de estudiantes y programadores para intercambiar experiencias y conocimientos.",
+            feature4_title: "Certificación",
+            feature4_desc:
+              "Recibe certificados reconocidos por el mercado después de completar cada curso y proyecto.",
+            chat_title: "Chat IA - Joven Programador",
+            chat_subtitle:
+              "Resuelve tus dudas sobre programación con nuestra inteligencia artificial especializada",
+            chat_header: "Asistente Virtual Joven Programador",
+            chat_welcome:
+              "¡Hola! Soy el asistente de Joven Programador. ¿Cómo puedo ayudarte hoy con tus dudas sobre programación?",
+            chat_placeholder: "Escribe tu pregunta sobre programación...",
+            chat_send: "Enviar",
+            footer_title: "Joven Programador",
+            footer_desc:
+              "Tu plataforma completa para aprender programación y desarrollar habilidades para el mercado tecnológico.",
+            courses_title: "Cursos",
+            course1: "Desarrollo Web",
+            course2: "JavaScript",
+            course3: "Python",
+            course4: "React",
+            course5: "Node.js",
+            resources_title: "Recursos",
+            resource1: "Blog",
+            resource2: "Tutoriales",
+            resource3: "Proyectos",
+            resource4: "Comunidad",
+            resource5: "Soporte",
+            contact_title: "Contacto",
+            copyright:
+              "&copy; 2023 Joven Programador. Todos los derechos reservados.",
+            accessibility_title: "Accesibilidad",
+            high_contrast: "Alto Contraste",
+            large_text: "Texto Grande",
+            vlibras_btn: "Activar VLibras",
+          },
+          it: {
+            hero_title:
+              "Il Tuo <span>Viaggio</span> nella Programmazione Inizia Qui",
+            hero_subtitle:
+              "Impara la programazione da zero a avanzado con la nostra piattaforma interattiva. Corsi, progetti pratici e supporto della comunità.",
+            cta_explore: "Esplora Corsi",
+            cta_learn_more: "Scopri di Più",
+            features_title: "Cosa Offriamo",
+            features_subtitle:
+              "Scopri tutte le risorse che daranno una spinta alla tua carriera nella programazione",
+            feature1_title: "Corsi Completi",
+            feature1_desc:
+              "Impara con corsi strutturati dal livello base a quello avanzado in varie tecnologie e linguaggi di programazione.",
+            feature2_title: "Progetti Pratici",
+            feature2_desc:
+              "Sviluppa progetti reali che comporranno il tuo portfolio e ti prepareranno per il mercato del lavoro.",
+            feature3_title: "Comunità Attiva",
+            feature3_desc:
+              "Unisciti a una comunità di migliaia di studenti e programmatori per scambiare esperienze e conoscenze.",
+            feature4_title: "Certificazione",
+            feature4_desc:
+              "Ricevi certificati riconosciuti dal mercato dopo il completamento di ogni corso e progetto.",
+            chat_title: "Chat IA - Giovane Programmatore",
+            chat_subtitle:
+              "Risolvi i tuoi dubbi sulla programazione con la nostra intelligenza artificiale specializzata",
+            chat_header: "Assistente Virtuale Giovane Programmatore",
+            chat_welcome:
+              "Ciao! Sono l'assistente di Giovane Programmatore. Come posso aiutarti oggi con le tue domande sulla programazione?",
+            chat_placeholder: "Digita la tua domanda sulla programazione...",
+            chat_send: "Invia",
+            footer_title: "Giovane Programmatore",
+            footer_desc:
+              "La tua piattaforma completa per imparare la programazione e sviluppare competenze per il mercato tecnologico.",
+            courses_title: "Cursos",
+            course1: "Sviluppo Web",
+            course2: "JavaScript",
+            course3: "Python",
+            course4: "React",
+            course5: "Node.js",
+            resources_title: "Risorse",
+            resource1: "Blog",
+            resource2: "Tutorial",
+            resource3: "Progetti",
+            resource4: "Comunità",
+            resource5: "Supporto",
+            contact_title: "Contatto",
+            copyright:
+              "&copy; 2023 Giovane Programmatore. Tutti i diritti riservati.",
+            accessibility_title: "Accessibilità",
+            high_contrast: "Alto Contrasto",
+            large_text: "Testo Grande",
+            vlibras_btn: "Attiva VLibras",
+          },
+        };
+
+        // Function to add a message to the chat
+        function addMessage(message, isUser = false) {
+          const messageDiv = document.createElement("div");
+          messageDiv.classList.add("message");
+          messageDiv.classList.add(isUser ? "user-message" : "bot-message");
+          messageDiv.textContent = message;
+          chatMessages.appendChild(messageDiv);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // ✅ CORREÇÃO: Função para processar input do usuário conectada com o backend Flask
+        async function processInput(input) {
+            console.log('🔄 Enviando para API:', input);
+            
+            try {
+                // ✅ CORRIGIDO: Usando a variável BACKEND_URL
+                const response = await fetch(`${BACKEND_URL}/perguntar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        pergunta: input  // Usando "pergunta" conforme definido no backend
+                    })
+                });
+
+                console.log('📥 Status da API:', response.status);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ Resposta da API recebida:', data);
+                    return data.resposta;  // Usando "resposta" conforme definido no backend
+                } else {
+                    console.error('❌ Erro na API:', response.status);
+                    throw new Error('API error: ' + response.status);
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro na conexão:', error);
+                
+                // Fallback local se a API falhar
+                const fallbackResponses = {
+                    'python': '🐍 **Curso de Python - Jovem Programador**\n\nOferecemos um curso completo de Python do básico ao avançado! **100% GRATUITO** com certificado!',
+                    'javascript': '⚡ **JavaScript Full Stack - Jovem Programador**\n\nAprenda JavaScript moderno, React e Node.js. **TOTALMENTE GRATUITO**!',
+                    'react': '⚛️ **Curso de React - Jovem Programador**\n\nDomine React.js com projetos reais. **GRATUITO**!',
+                    'node': '🚀 **Curso de Node.js - Jovem Programador**\n\nAprenda backend com Node.js. **100% GRATUITO**!',
+                    'preço': '💰 **TODOS os nossos cursos são GRATUITOS!**\n\nNão cobramos nada!',
+                    'gratuito': '🎯 **Sim, todos os cursos são GRATUITOS!**',
+                    'carreira': '💼 **Carreira em Programação**\n\nNossos cursos preparam você para o mercado!',
+                    'default': '🤖 **Jovem Programador**\n\nPosso ajudar com cursos GRATUITOS de Python, JavaScript, React e Node.js!'
+                };
+
+                for (const keyword in fallbackResponses) {
+                    if (input.toLowerCase().includes(keyword)) {
+                        return fallbackResponses[keyword];
+                    }
+                }
+
+                return fallbackResponses['default'];
+            }
+        }
+
+        // Event listener for send button
+        sendButton.addEventListener("click", async function () {
+          const message = userInput.value.trim();
+          if (message) {
+            addMessage(message, true);
+            userInput.value = "";
+
+            // Simulate thinking time
+            setTimeout(async function () {
+              const response = await processInput(message);
+              addMessage(response);
+            }, 1000);
+          }
+        });
+
+        // Event listener for Enter key
+        userInput.addEventListener("keypress", async function (e) {
+          if (e.key === "Enter") {
+            const message = userInput.value.trim();
+            if (message) {
+              addMessage(message, true);
+              userInput.value = "";
+
+              setTimeout(async function () {
+                const response = await processInput(message);
+                addMessage(response);
+              }, 1000);
+            }
+          }
+        });
+
+        // Language selector functionality
+        languageBtn.addEventListener("click", function () {
+          languageDropdown.classList.toggle("show");
+        });
+
+        // Close language dropdown when clicking outside
+        document.addEventListener("click", function (e) {
+          if (
+            !languageBtn.contains(e.target) &&
+            !languageDropdown.contains(e.target)
+          ) {
+            languageDropdown.classList.remove("show");
+          }
+        });
+
+        // Change language
+        document.querySelectorAll(".language-option").forEach((option) => {
+          option.addEventListener("click", function () {
+            const lang = this.getAttribute("data-lang");
+            changeLanguage(lang);
+            languageDropdown.classList.remove("show");
+
+            // Update active option
+            document.querySelectorAll(".language-option").forEach((opt) => {
+              opt.classList.remove("active");
+              opt.innerHTML = opt.textContent;
+            });
+            this.classList.add("active");
+            this.innerHTML = '<i class="fas fa-check"></i> ' + this.textContent;
+          });
+        });
+
+        // Function to change language
+        function changeLanguage(lang) {
+          currentLanguage.textContent = document.querySelector(
+            `.language-option[data-lang="${lang}"]`
+          ).textContent;
+
+          // Update all translatable elements
+          document.querySelectorAll("[data-translate]").forEach((element) => {
+            const key = element.getAttribute("data-translate");
+            if (translations[lang] && translations[lang][key]) {
+              if (
+                element.tagName === "INPUT" ||
+                element.tagName === "TEXTAREA"
+              ) {
+                element.placeholder = translations[lang][key];
+              } else {
+                element.innerHTML = translations[lang][key];
+              }
+            }
+          });
+        }
+
+        // Accessibility panel toggle
+        accessibilityBtn.addEventListener("click", function () {
+          accessibilityPanel.classList.toggle("open");
+        });
+
+        // VLibras button
+        vlibrasBtn.addEventListener("click", function () {
+          // This would normally trigger the VLibras widget
+          // Since we've already initialized it, we'll just show a message
+          alert(
+            "VLibras ativado! O widget de Libras está disponível no canto inferior esquerdo da tela."
+          );
+        });
+
+        // High contrast toggle
+        document
+          .getElementById("high-contrast")
+          .addEventListener("change", function (e) {
+            if (e.target.checked) {
+              document.body.classList.add("high-contrast");
+            } else {
+              document.body.classList.remove("high-contrast");
+            }
+          });
+
+        // Large text toggle
+        document
+          .getElementById("large-text")
+          .addEventListener("change", function (e) {
+            if (e.target.checked) {
+              document.body.classList.add("large-text");
+              document.documentElement.style.fontSize = "18px";
+              document.body.style.fontSize = "18px";
+              document.body.style.lineHeight = "1.8";
+              document
+                .querySelectorAll("h1, h2, h3, h4, h5, h6")
+                .forEach((el) => {
+                  el.style.fontSize =
+                    "calc(1.2 * " + getComputedStyle(el).fontSize + ")";
+                });
+              document
+                .querySelectorAll("p, span, a, li, button")
+                .forEach((el) => {
+                  el.style.fontSize =
+                    "calc(1.2 * " + getComputedStyle(el).fontSize + ")";
+                });
+              document.querySelectorAll("input, textarea").forEach((el) => {
+                el.style.fontSize =
+                  "calc(1.2 * " + getComputedStyle(el).fontSize + ")";
+                el.style.padding =
+                  "calc(1.2 * " + getComputedStyle(el).padding + ")";
+              });
+            } else {
+              document.body.classList.remove("large-text");
+              document.documentElement.style.fontSize = "";
+              document.body.style.fontSize = "";
+              document.body.style.lineHeight = "";
+              document
+                .querySelectorAll(
+                  "h1, h2, h3, h4, h5, h6, p, span, a, li, button, input, textarea"
+                )
+                .forEach((el) => {
+                  el.style.fontSize = "";
+                });
+              document.querySelectorAll("input, textarea").forEach((el) => {
+                el.style.padding = "";
+              });
+            }
+          });
+
+        // Add CSS for high contrast mode
+        const style = document.createElement("style");
+        style.textContent = `
+                body.high-contrast {
+                    --bg: #000000;
+                    --text: #ffffff;
+                    --text-light: #cccccc;
+                    --card-bg: #222222;
+                    --border: #ffffff;
+                    --primary: #ffff00;
+                    --primary-dark: #cccc00;
+                    --primary-light: #ffff99;
+                }
+            `;
+        document.head.appendChild(style);
+      });
+
+      // Modal Functions
+      function openCoursesModal() {
+        document.getElementById('coursesModal').style.display = 'block';
+      }
+
+      function closeCoursesModal() {
+        document.getElementById('coursesModal').style.display = 'none';
+      }
+
+      function openAboutModal() {
+        document.getElementById('aboutModal').style.display = 'block';
+      }
+
+      function closeAboutModal() {
+        document.getElementById('aboutModal').style.display = 'none';
+      }
+
+      function openSignupModal() {
+        document.getElementById('signupModal').style.display = 'block';
+      }
+
+      function closeSignupModal() {
+        document.getElementById('signupModal').style.display = 'none';
+      }
+
+      function askAboutCourse(course) {
+        closeCoursesModal();
+        const userInput = document.getElementById('userInput');
+        userInput.value = `curso de ${course}`;
+        document.getElementById('sendButton').click();
+      }
+
+      // Close modals when clicking outside
+      window.addEventListener('click', function(e) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+          if (e.target === modal) {
+            modal.style.display = 'none';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
+
+
+
+<!-- 
+// Initialize VLibras
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize VLibras widget
+        if (typeof VLibras !== "undefined") {
+          new VLibras.Widget("https://vlibras.gov.br/app");
+        }
+         
+        // ✅ ADICIONADO: Configuração da URL do backend
+        const BACKEND_URL = 'http://127.0.0.1:5000'; // Para desenvolvimento local
         // Chat functionality
         const chatMessages = document.getElementById("chatMessages");
         const userInput = document.getElementById("userInput");
@@ -1507,7 +2029,4 @@
             modal.style.display = 'none';
           }
         });
-      });
-    </script>
-  </body>
-</html>
+      });  -->
