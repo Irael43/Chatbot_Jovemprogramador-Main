@@ -183,6 +183,7 @@ def extrair_site():
         "conteudo": conteudo[:1000] + "..." if len(conteudo) > 1000 else conteudo,
         "tamanho_total": len(conteudo)
     })
+# Essa foi a nova rota adicionada para analisar imagens de sites
 
 # === 8️⃣ Rota para analisar imagens de sites ===
 @app.route("/analisar-imagens", methods=["POST"])
@@ -200,18 +201,30 @@ def analisar_imagens():
         "imagens": imagens
     })
 
-# === 9️⃣ Rota raiz ===
+# === 🔄 ROTAS PARA FRONTEND ===
+from flask import send_from_directory
+
+# Rota principal - SERVIR O FRONTEND
 @app.route("/")
 def home():
-    return jsonify({
-        "mensagem": "Bem-vindo ao Chatbot Jovem Programador!",
-        "rotas_disponiveis": {
-            "GET /health": "Status do servidor",
-            "POST /perguntar": "Fazer perguntas ao chatbot",
-            "POST /extrair-site": "Extrair conteúdo de sites",
-            "POST /analisar-imagens": "Analisar imagens de sites"
-        }
-    })
+    try:
+        return send_from_directory('frontend', 'interface.html')
+    except:
+        return jsonify({
+            "mensagem": "Bem-vindo ao Chatbot Jovem Programador!",
+            "aviso": "Frontend não encontrado, usando API",
+            "rotas_disponiveis": {
+                "GET /health": "Status do servidor",
+                "POST /perguntar": "Fazer perguntas ao chatbot", 
+                "POST /extrair-site": "Extrair conteúdo de sites",
+                "POST /analisar-imagens": "Analisar imagens de sites"
+            }
+        })
+
+# Rota para arquivos estáticos
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('frontend', filename)
 
 # === 🔟 Inicia o servidor ===
 if __name__ == "__main__":
@@ -229,20 +242,52 @@ if __name__ == "__main__":
     print("   POST /perguntar")
     print("   POST /extrair-site") 
     print("   POST /analisar-imagens")
+    print("   GET  / - Interface web")
     print("=" * 50)
     
     # ✅ LINHA MODIFICADA - Agora usa a porta dinâmica
     app.run(debug=False, host="0.0.0.0", port=port)
 
+# # === 8️⃣ Rota para analisar imagens de sites ===
+# @app.route("/analisar-imagens", methods=["POST"])
+# def analisar_imagens():
+#     dados = request.json
+#     url = dados.get("url", "").strip()
+    
+#     if not url:
+#         return jsonify({"erro": "URL não fornecida"})
+    
+#     imagens = extrair_dados_imagens(url)
+#     return jsonify({
+#         "url": url,
+#         "total_imagens": len(imagens),
+#         "imagens": imagens
+#     })
 
-# Código original para rodar localmente:
-     
+# # === 9️⃣ Rota raiz ===
+# @app.route("/")
+# def home():
+#     return jsonify({
+#         "mensagem": "Bem-vindo ao Chatbot Jovem Programador!",
+#         "rotas_disponiveis": {
+#             "GET /health": "Status do servidor",
+#             "POST /perguntar": "Fazer perguntas ao chatbot",
+#             "POST /extrair-site": "Extrair conteúdo de sites",
+#             "POST /analisar-imagens": "Analisar imagens de sites"
+#         }
+#     })
+
+# # === 🔟 Inicia o servidor ===
 # if __name__ == "__main__":
 #     print("=" * 50)
 #     print("🤖 Chatbot Jovem Programador Iniciando...")
 #     print("=" * 50)
 #     print("✅ API Key carregada com sucesso")
-#     print("🚀 Servidor rodando em: http://127.0.0.1:5000")
+    
+#     # ✅ LINHA ADICIONADA - Detecta se é produção ou desenvolvimento
+#     port = int(os.environ.get("PORT", 5000))
+    
+#     print(f"🚀 Servidor rodando em: http://0.0.0.0:{port}")
 #     print("📋 Rotas disponíveis:")
 #     print("   GET  /health")
 #     print("   POST /perguntar")
@@ -250,6 +295,7 @@ if __name__ == "__main__":
 #     print("   POST /analisar-imagens")
 #     print("=" * 50)
     
-#     app.run(debug=True, host="0.0.0.0", port=5000)
+#     # ✅ LINHA MODIFICADA - Agora usa a porta dinâmica
+#     app.run(debug=False, host="0.0.0.0", port=port)
 
 
