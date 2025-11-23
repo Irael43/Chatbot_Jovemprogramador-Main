@@ -112,7 +112,6 @@
         font-size: 1.5rem;
         cursor: pointer;
         padding: 0.5rem;
-        margin-left: 1rem;
       }
 
       .cta-button {
@@ -130,6 +129,11 @@
       .cta-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 0 20px rgba(157, 77, 255, 0.7);
+      }
+
+      /* ✅ BOTÃO COMEÇAR AGORA PARA MOBILE */
+      .mobile-cta {
+        display: none;
       }
 
       /* Language Selector */
@@ -195,7 +199,7 @@
         min-height: 100vh;
         display: flex;
         align-items: center;
-        padding: 0 5%;
+        padding: 100px 5% 0; /* ✅ CORRIGIDO: padding-top para header */
         background: radial-gradient(
             circle at 10% 20%,
             rgba(157, 77, 255, 0.15) 0%,
@@ -647,6 +651,46 @@
         border-color: var(--primary);
       }
 
+      /* ✅ SELETOR DE IDIOMAS MOBILE */
+      .mobile-language-selector {
+        padding: 1rem 5%;
+        border-bottom: 1px solid var(--border);
+        display: none;
+      }
+
+      .mobile-language-selector h4 {
+        color: var(--primary-light);
+        margin-bottom: 0.8rem;
+        font-size: 1rem;
+      }
+
+      .mobile-language-selector .language-option {
+        padding: 0.8rem 1rem;
+        cursor: pointer;
+        transition: background 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-light);
+      }
+
+      .mobile-language-selector .language-option:hover {
+        background: rgba(157, 77, 255, 0.1);
+      }
+
+      .mobile-language-selector .language-option.active {
+        color: var(--primary-light);
+        font-weight: 600;
+        background: rgba(157, 77, 255, 0.15);
+      }
+
+      .mobile-language-selector .language-option i {
+        font-size: 0.9rem;
+        width: 16px;
+      }
+
       /* ✅ RESPONSIVE CORRIGIDO */
       @media (max-width: 1024px) {
         .hero-content {
@@ -685,6 +729,29 @@
           text-align: left;
         }
 
+        /* ✅ BOTÃO COMEÇAR AGORA NO MENU MOBILE */
+        .mobile-cta {
+          display: block;
+          background: var(--gradient);
+          color: white !important;
+          border-radius: 2rem;
+          margin: 1rem;
+          text-align: center;
+          font-weight: 600;
+          padding: 0.8rem 1.5rem;
+          box-shadow: 0 0 15px rgba(157, 77, 255, 0.5);
+        }
+
+        /* ✅ ESCONDE BOTÃO DESKTOP NO MOBILE */
+        .cta-button {
+          display: none;
+        }
+
+        /* ✅ ESCONDE LANGUAGE SELECTOR NO MOBILE */
+        .language-selector {
+          display: none;
+        }
+
         .language-selector {
           margin-right: 0;
         }
@@ -693,11 +760,22 @@
         .menu-toggle {
           display: flex;
         }
+
+        /* ✅ AJUSTE HEADER PARA MOBILE */
+        .hero {
+          padding-top: 90px;
+          min-height: calc(100vh - 90px);
+        }
+
+        /* ✅ MOSTRA O SELETOR DE IDIOMAS NO MOBILE */
+        .mobile-language-selector {
+          display: block;
+        }
       }
 
       @media (max-width: 768px) {
         .hero-text h2 {
-          font-size: 2.5rem;
+          font-size: 2rem;
         }
 
         .features-grid {
@@ -714,11 +792,74 @@
         }
 
         .navbar {
-          padding: 1rem;
+          padding: 0.8rem 1rem;
         }
 
         .logo h1 {
-          font-size: 1.5rem;
+          font-size: 1.3rem;
+        }
+
+        /* ✅ CORREÇÃO DEFINITIVA PARA MOBILE */
+        .hero {
+          padding-top: 80px;
+          min-height: calc(100vh - 80px);
+        }
+
+        .hero-text h2 {
+          font-size: 1.8rem;
+          margin-top: 0.5rem;
+        }
+
+        /* ✅ MENU MOBILE MELHORADO */
+        .nav-links {
+          padding: 0.5rem 0;
+        }
+
+        .nav-links a {
+          padding: 0.8rem 5%;
+        }
+
+        .mobile-cta {
+          margin: 0.8rem 1rem;
+          padding: 0.7rem 1.2rem;
+          font-size: 0.9rem;
+        }
+
+        .menu-toggle {
+          font-size: 1.3rem;
+        }
+
+        /* ✅ AJUSTES PARA O SELETOR DE IDIOMAS NO MOBILE */
+        .mobile-language-selector {
+          padding: 0.8rem 5%;
+        }
+        
+        .mobile-language-selector h4 {
+          font-size: 0.9rem;
+          margin-bottom: 0.6rem;
+        }
+        
+        .mobile-language-selector .language-option {
+          padding: 0.6rem 0.8rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-text h2 {
+          font-size: 1.6rem;
+        }
+
+        .logo h1 {
+          font-size: 1.1rem;
+        }
+
+        .navbar {
+          padding: 0.6rem 1rem;
+        }
+
+        .hero {
+          padding-top: 70px;
         }
       }
     </style>
@@ -742,7 +883,29 @@
           <a href="#features">Cursos</a>
           <a href="#chat">Chat IA</a>
           <a href="#about">Sobre</a>
+          
+          <!-- ✅ SELETOR DE IDIOMAS PARA MOBILE -->
+          <div class="mobile-language-selector">
+            <h4>Idioma/Language</h4>
+            <div class="language-option active" data-lang="pt" onclick="changeLanguage('pt')">
+              <i class="fas fa-check"></i>
+              Português
+            </div>
+            <div class="language-option" data-lang="en" onclick="changeLanguage('en')">
+              English
+            </div>
+            <div class="language-option" data-lang="es" onclick="changeLanguage('es')">
+              Español
+            </div>
+            <div class="language-option" data-lang="it" onclick="changeLanguage('it')">
+              Italiano
+            </div>
+          </div>
+          
+          <!-- ✅ BOTÃO "COMEÇAR AGORA" ADICIONADO NO MENU MOBILE -->
+          <a href="#" class="mobile-cta" onclick="openSignupModal()">Começar Agora</a>
         </div>
+        
         <div class="language-selector">
           <button class="language-btn" id="languageBtn">
             <i class="fas fa-globe"></i>
@@ -759,6 +922,8 @@
             <div class="language-option" data-lang="it">Italiano</div>
           </div>
         </div>
+        
+        <!-- ✅ BOTÃO "COMEÇAR AGORA" PARA DESKTOP -->
         <button class="cta-button" onclick="openSignupModal()">Começar Agora</button>
       </nav>
     </header>
@@ -1608,7 +1773,6 @@
   </body>
 </html>
 
-
 <!-- <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -1682,6 +1846,7 @@
         padding: 1rem 5%;
         max-width: 1400px;
         margin: 0 auto;
+        position: relative;
       }
 
       .logo {
@@ -1715,6 +1880,17 @@
         color: var(--primary-light);
       }
 
+      /* ✅ BOTÃO MENU HAMBÚRGUER */
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text-light);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+      }
+
       .cta-button {
         background: var(--gradient);
         color: white;
@@ -1730,6 +1906,11 @@
       .cta-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 0 20px rgba(157, 77, 255, 0.7);
+      }
+
+      /* ✅ BOTÃO COMEÇAR AGORA PARA MOBILE */
+      .mobile-cta {
+        display: none;
       }
 
       /* Language Selector */
@@ -1795,7 +1976,7 @@
         min-height: 100vh;
         display: flex;
         align-items: center;
-        padding: 0 5%;
+        padding: 100px 5% 0; /* ✅ CORRIGIDO: padding-top para header */
         background: radial-gradient(
             circle at 10% 20%,
             rgba(157, 77, 255, 0.15) 0%,
@@ -2247,7 +2428,7 @@
         border-color: var(--primary);
       }
 
-      /* Responsive */
+      /* ✅ RESPONSIVE CORRIGIDO */
       @media (max-width: 1024px) {
         .hero-content {
           grid-template-columns: 1fr;
@@ -2258,18 +2439,77 @@
           justify-content: center;
         }
 
+        /* ✅ MENU RESPONSIVO CORRIGIDO */
         .nav-links {
+          display: none;
+          flex-direction: column;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background: var(--bg-light);
+          backdrop-filter: blur(20px);
+          border-top: 1px solid var(--border);
+          padding: 1rem 0;
+          gap: 0;
+          z-index: 1001;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .nav-links a {
+          padding: 1rem 5%;
+          border-bottom: 1px solid var(--border);
+          width: 100%;
+          text-align: left;
+        }
+
+        /* ✅ BOTÃO COMEÇAR AGORA NO MENU MOBILE */
+        .mobile-cta {
+          display: block;
+          background: var(--gradient);
+          color: white !important;
+          border-radius: 2rem;
+          margin: 1rem;
+          text-align: center;
+          font-weight: 600;
+          padding: 0.8rem 1.5rem;
+          box-shadow: 0 0 15px rgba(157, 77, 255, 0.5);
+        }
+
+        /* ✅ ESCONDE BOTÃO DESKTOP NO MOBILE */
+        .cta-button {
+          display: none;
+        }
+
+        /* ✅ ESCONDE LANGUAGE SELECTOR NO MOBILE */
+        .language-selector {
           display: none;
         }
 
         .language-selector {
           margin-right: 0;
         }
+
+        /* ✅ BOTÃO MENU HAMBÚRGUER VISÍVEL */
+        .menu-toggle {
+          display: flex;
+        }
+
+        /* ✅ AJUSTE HEADER PARA MOBILE */
+        .hero {
+          padding-top: 90px;
+          min-height: calc(100vh - 90px);
+        }
       }
+
+      
 
       @media (max-width: 768px) {
         .hero-text h2 {
-          font-size: 2.5rem;
+          font-size: 2rem;
         }
 
         .features-grid {
@@ -2284,10 +2524,68 @@
           width: 280px;
           right: 1rem;
         }
+
+        .navbar {
+          padding: 0.8rem 1rem;
+        }
+
+        .logo h1 {
+          font-size: 1.3rem;
+        }
+
+        /* ✅ CORREÇÃO DEFINITIVA PARA MOBILE */
+        .hero {
+          padding-top: 80px;
+          min-height: calc(100vh - 80px);
+        }
+
+        .hero-text h2 {
+          font-size: 1.8rem;
+          margin-top: 0.5rem;
+        }
+
+        /* ✅ MENU MOBILE MELHORADO */
+        .nav-links {
+          padding: 0.5rem 0;
+        }
+
+        .nav-links a {
+          padding: 0.8rem 5%;
+        }
+
+        .mobile-cta {
+          margin: 0.8rem 1rem;
+          padding: 0.7rem 1.2rem;
+          font-size: 0.9rem;
+        }
+
+        .menu-toggle {
+          font-size: 1.3rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-text h2 {
+          font-size: 1.6rem;
+        }
+
+        .logo h1 {
+          font-size: 1.1rem;
+        }
+
+        .navbar {
+          padding: 0.6rem 1rem;
+        }
+
+        .hero {
+          padding-top: 70px;
+        }
       }
     </style>
   </head>
   <body>
+
+    
     <!- Header ->
     <header>
       <nav class="navbar">
@@ -2295,12 +2593,46 @@
           <i class="fas fa-code"></i>
           <h1>Jovem Programador</h1>
         </div>
-        <div class="nav-links">
+        
+        <!- ✅ BOTÃO MENU HAMBÚRGUER ADICIONADO ->
+        <button class="menu-toggle" id="menuToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="nav-links" id="navLinks">
           <a href="#home">Início</a>
           <a href="#features">Cursos</a>
           <a href="#chat">Chat IA</a>
           <a href="#about">Sobre</a>
+          <div class="nav-links" id="navLinks">
+  <a href="#home">Início</a>
+  <a href="#features">Cursos</a>
+  <a href="#chat">Chat IA</a>
+  <a href="#about">Sobre</a>
+  
+  <!- ✅ SELETOR DE IDIOMAS PARA MOBILE ->
+  <div class="mobile-language-selector">
+    <h4>Idioma/Language</h4>
+    <div class="language-option active" data-lang="pt" onclick="changeLanguage('pt')">
+      <i class="fas fa-check"></i>
+      Português
+    </div>
+    <div class="language-option" data-lang="en" onclick="changeLanguage('en')">
+      English
+    </div>
+    <div class="language-option" data-lang="es" onclick="changeLanguage('es')">
+      Español
+    </div>
+    <div class="language-option" data-lang="it" onclick="changeLanguage('it')">
+      Italiano
+    </div>
+  </div>
+  
+  <!- ✅ BOTÃO "COMEÇAR AGORA" ADICIONADO NO MENU MOBILE ->
+  <a href="#" class="mobile-cta" onclick="openSignupModal()">Começar Agora</a>
+</div>
         </div>
+        
         <div class="language-selector">
           <button class="language-btn" id="languageBtn">
             <i class="fas fa-globe"></i>
@@ -2317,11 +2649,13 @@
             <div class="language-option" data-lang="it">Italiano</div>
           </div>
         </div>
+        
+        <!- ✅ BOTÃO "COMEÇAR AGORA" PARA DESKTOP 
         <button class="cta-button" onclick="openSignupModal()">Começar Agora</button>
       </nav>
     </header>
 
-    <!- Hero Section ->
+    <!-Hero Section 
     <section class="hero" id="home">
       <div class="hero-content">
         <div class="hero-text">
@@ -2436,7 +2770,7 @@
       </div>
     </section>
 
-    <!- Footer ->
+    <!- Footer 
     <footer id="about">
       <div class="footer-content">
         <div class="footer-column">
@@ -2611,6 +2945,45 @@
     </div>
 
     <script>
+      // ✅ MENU MOBILE TOGGLE - ADICIONADO NO INÍCIO
+      const menuToggle = document.getElementById('menuToggle');
+      const navLinks = document.getElementById('navLinks');
+
+      if (menuToggle && navLinks) {
+          menuToggle.addEventListener('click', function() {
+              navLinks.classList.toggle('active');
+              // Altera o ícone
+              const icon = menuToggle.querySelector('i');
+              if (navLinks.classList.contains('active')) {
+                  icon.classList.remove('fa-bars');
+                  icon.classList.add('fa-times');
+              } else {
+                  icon.classList.remove('fa-times');
+                  icon.classList.add('fa-bars');
+              }
+          });
+
+          // Fecha o menu ao clicar em um link
+          document.querySelectorAll('.nav-links a').forEach(link => {
+              link.addEventListener('click', function() {
+                  navLinks.classList.remove('active');
+                  const icon = menuToggle.querySelector('i');
+                  icon.classList.remove('fa-times');
+                  icon.classList.add('fa-bars');
+              });
+          });
+
+          // Fecha o menu ao redimensionar a tela para desktop
+          window.addEventListener('resize', function() {
+              if (window.innerWidth > 1024) {
+                  navLinks.classList.remove('active');
+                  const icon = menuToggle.querySelector('i');
+                  icon.classList.remove('fa-times');
+                  icon.classList.add('fa-bars');
+              }
+          });
+      }
+
       // Initialize VLibras
       document.addEventListener("DOMContentLoaded", function () {
         // Initialize VLibras widget
@@ -2620,9 +2993,6 @@
 
         const BACKEND_URL = 'https://chatbot-jovemprogramador.onrender.com';
         
-        // // ✅ ADICIONADO: Configuração da URL do backend
-        // const BACKEND_URL = 'http://127.0.0.1:5000'; // Para desenvolvimento local
-
         // Chat functionality
         const chatMessages = document.getElementById("chatMessages");
         const userInput = document.getElementById("userInput");
@@ -3128,7 +3498,7 @@
       });
     </script>
   </body>
-</html> -->
+</html>
 
 
-
+ -->
