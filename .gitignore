@@ -1,24 +1,27 @@
-+  1 # Arquivos de ambiente
-+  2 .env
-+  3 *.env
-+  4 
-+  5 # Ambiente virtual
-+  6 .venv/
-+  7 venv/
-+  8 env/
-+  9 
-+ 10 # Python
-+ 11 __pycache__/
-+ 12 *.pyc
-+ 13 *.pyo
-+ 14 *.pyd
-+ 15 
-+ 16 # Sistema
-+ 17 .DS_Store
-+ 18 Thumbs.db
-+ 19 
-+ 20 # IDEs
-+ 21 .vscode/
-+ 22 .idea/
-+ 23 *.swp
-+ 24 *.swo
+# Arquivos de ambiente
+.env
+*.env
+
+# Ambiente virtual
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
