@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import google.generativeai as genai
 import os
@@ -64,235 +64,21 @@ def extrair_dados_imagens(url: str):
     except Exception:
         return []
 
-# === 🔹 ROTA PRINCIPAL COM FRONTEND INTEGRADO ===
+# === 🔹 ROTA SIMPLES - SÓ API ===
 @app.route('/')
-def serve_frontend():
-    """Serve o frontend diretamente no HTML"""
-    return '''
-    <!DOCTYPE html>
-    <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Chatbot Jovem Programador</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background: linear-gradient(135deg, #1a002b, #24024e);
-                color: white;
-                min-height: 100vh;
-                padding: 20px;
-            }
-            .container {
-                max-width: 1000px;
-                margin: 0 auto;
-            }
-            .header {
-                text-align: center;
-                margin-bottom: 30px;
-                padding: 20px;
-            }
-            .header h1 {
-                font-size: 2.5rem;
-                background: linear-gradient(135deg, #bb6afc, #8c44fa);
-                -webkit-background-clip: text;
-                background-clip: text;
-                color: transparent;
-                margin-bottom: 10px;
-            }
-            .header p {
-                color: #e2e2e2;
-                font-size: 1.1rem;
-            }
-            .chat-container {
-                background: rgba(187, 106, 252, 0.08);
-                backdrop-filter: blur(10px);
-                border-radius: 20px;
-                border: 1px solid rgba(187, 106, 252, 0.3);
-                overflow: hidden;
-                box-shadow: 0 25px 50px rgba(187, 106, 252, 0.15);
-            }
-            .chat-header {
-                background: linear-gradient(135deg, #bb6afc, #8c44fa);
-                padding: 20px;
-                text-align: center;
-            }
-            .chat-header h2 {
-                font-size: 1.5rem;
-                font-weight: 600;
-            }
-            .chat-messages {
-                height: 500px;
-                overflow-y: auto;
-                padding: 20px;
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-            }
-            .message {
-                max-width: 80%;
-                padding: 15px 20px;
-                border-radius: 20px;
-                font-size: 1rem;
-                line-height: 1.4;
-            }
-            .user-message {
-                align-self: flex-end;
-                background: linear-gradient(135deg, #bb6afc, #8c44fa);
-                color: white;
-                border-bottom-right-radius: 5px;
-            }
-            .bot-message {
-                align-self: flex-start;
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(187, 106, 252, 0.3);
-                border-bottom-left-radius: 5px;
-            }
-            .chat-input {
-                display: flex;
-                padding: 20px;
-                border-top: 1px solid rgba(187, 106, 252, 0.3);
-                gap: 15px;
-            }
-            .chat-input input {
-                flex: 1;
-                padding: 15px 20px;
-                border: 2px solid rgba(187, 106, 252, 0.3);
-                border-radius: 25px;
-                font-size: 1rem;
-                background: rgba(255, 255, 255, 0.05);
-                color: white;
-                outline: none;
-            }
-            .chat-input input:focus {
-                border-color: #bb6afc;
-                box-shadow: 0 0 0 3px rgba(187, 106, 252, 0.3);
-            }
-            .chat-input button {
-                padding: 15px 30px;
-                background: linear-gradient(135deg, #bb6afc, #8c44fa);
-                color: white;
-                border: none;
-                border-radius: 25px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s;
-                min-width: 120px;
-            }
-            .chat-input button:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 10px 20px rgba(187, 106, 252, 0.4);
-            }
-            .typing {
-                color: #bb6afc;
-                font-style: italic;
-                padding: 10px 20px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <h1>🤖 Chatbot Jovem Programador</h1>
-                <p>Assistente virtual para informações sobre cursos gratuitos de programação</p>
-            </div>
-            
-            <div class="chat-container">
-                <div class="chat-header">
-                    <h2>💬 Assistente Virtual</h2>
-                </div>
-                
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message bot-message">
-                        👋 Olá! Sou o assistente do Jovem Programador. 
-                        Posso ajudar com informações sobre cursos gratuitos de programação! 
-                        Pergunte sobre Python, JavaScript, React ou como se inscrever.
-                    </div>
-                </div>
-                
-                <div class="chat-input">
-                    <input type="text" id="userInput" placeholder="Digite sua pergunta sobre programação...">
-                    <button onclick="sendMessage()">
-                        <i class="fas fa-paper-plane"></i> Enviar
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            const chatMessages = document.getElementById('chatMessages');
-            const userInput = document.getElementById('userInput');
-
-            function addMessage(message, isUser = false) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-                messageDiv.textContent = message;
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-
-            async function sendMessage() {
-                const message = userInput.value.trim();
-                if (!message) return;
-
-                // Adiciona mensagem do usuário
-                addMessage(message, true);
-                userInput.value = '';
-
-                // Mostra que está digitando
-                const typingDiv = document.createElement('div');
-                typingDiv.className = 'typing';
-                typingDiv.textContent = 'Digitando...';
-                typingDiv.id = 'typingIndicator';
-                chatMessages.appendChild(typingDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                try {
-                    const response = await fetch('/perguntar', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({pergunta: message})
-                    });
-                    
-                    // Remove "digitando..."
-                    document.getElementById('typingIndicator')?.remove();
-                    
-                    const data = await response.json();
-                    addMessage(data.resposta);
-                    
-                } catch (error) {
-                    // Remove "digitando..."
-                    document.getElementById('typingIndicator')?.remove();
-                    
-                    addMessage('❌ Erro de conexão. Tente novamente.');
-                    console.error('Erro:', error);
-                }
-            }
-
-            // Enter key support
-            userInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') sendMessage();
-            });
-
-            // Foco no input
-            userInput.focus();
-        </script>
-    </body>
-    </html>
-    '''
-
-# === 🔹 ROTA HEALTH CHECK ===
-@app.route('/health')
-def health_check():
-    """Rota de verificação de saúde"""
+def home():
     return jsonify({
-        "status": "healthy",
-        "service": "Chatbot Jovem Programador"
+        "mensagem": "🤖 Chatbot Jovem Programador API",
+        "status": "online", 
+        "uso": "Use /perguntar para o chat",
+        "frontend": "Acesse o frontend completo em: http://127.0.0.1:5501/frontend/interface.html"
     })
 
-# === 5️⃣ ROTA PRINCIPAL DO CHAT (NÃO MODIFICADA) ===
+@app.route('/health')
+def health_check():
+    return jsonify({"status": "healthy"})
+
+# === 5️⃣ ROTA PRINCIPAL DO CHAT (FUNCIONANDO PERFEITAMENTE) ===
 @app.route("/perguntar", methods=["POST"])
 def perguntar():
     dados = request.json
@@ -301,10 +87,7 @@ def perguntar():
     if not pergunta:
         return jsonify({"resposta": "Por favor, digite uma pergunta válida."})
 
-    # ===========================================================================================
-    # ✅  RESPOSTAS AUTOMÁTICAS PARA CUMPRIMENTOS E DESPEDIDAS
-    # ===========================================================================================
-
+    # Respostas automáticas
     cumprimentos = {
         "oi": "Olá! Como posso ajudar você hoje?",
         "olá": "Olá! Tudo bem? Estou aqui para ajudar.",
@@ -325,19 +108,17 @@ def perguntar():
 
     pergunta_lower = pergunta.lower()
 
-    # ✔ Verifica cumprimentos
+    # Verifica cumprimentos
     for termo in cumprimentos:
         if termo in pergunta_lower:
             return jsonify({"resposta": cumprimentos[termo]})
 
-    # ✔ Verifica despedidas
+    # Verifica despedidas
     for termo in despedidas:
         if termo in pergunta_lower:
             return jsonify({"resposta": despedidas[termo]})
 
-    # ===========================================================================================
-
-    # 🚫 Bloqueia perguntas fora do tema
+    # Filtro de temas
     termos_permitidos = [
         "jovem programador", "curso", "inscrição", "site",
         "senac", "sesi", "empregabilidade", "ensino", "formação", "aprendizagem"
@@ -364,7 +145,6 @@ def perguntar():
     prompt = f"""
     Você é um assistente especializado no site Jovem Programador (https://www.jovemprogramador.com.br).
     Responda APENAS com base nas informações desse site.
-    Caso a pergunta não esteja relacionada, informe que só pode responder sobre o site Jovem Programador.
 
     Conteúdo do site:
     {conteudo_site}
@@ -382,7 +162,6 @@ def perguntar():
     except Exception as e:
         texto_resposta = f"Ocorreu um erro ao gerar a resposta: {e}"
 
-    # Resposta de fallback acessível
     if not texto_resposta or len(texto_resposta) < 20:
         texto_resposta = (
             "Não encontrei informações suficientes no site Jovem Programador "
