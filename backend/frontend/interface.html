@@ -931,6 +931,8 @@
 
     <script>
       // ✅ MENU MOBILE TOGGLE
+
+      // ✅ MENU MOBILE TOGGLE
       const menuToggle = document.getElementById('menuToggle');
       const navLinks = document.getElementById('navLinks');
 
@@ -957,30 +959,31 @@
           });
       }
 
-      // Initialize VLibras
+      // ✅ Initialize VLibras
       document.addEventListener("DOMContentLoaded", function () {
         if (typeof VLibras !== "undefined") {
           new VLibras.Widget("https://vlibras.gov.br/app");
         }
-        const BACKEND_URL = 'https://chatbot-jovemprogramador.onrender.com';
-        // const BACKEND_URL = 'http://localhost:5000';
 
-        // Chat functionality
+        // ✅ URL CORRETA DO BACKEND
+        const BACKEND_URL = 'https://chatbot-jovemprogramador.onrender.com';
+
+        // ✅ Elementos do chat
         const chatMessages = document.getElementById("chatMessages");
         const userInput = document.getElementById("userInput");
         const sendButton = document.getElementById("sendButton");
 
-        // Language selector
+        // ✅ Language selector
         const languageBtn = document.getElementById("languageBtn");
         const languageDropdown = document.getElementById("languageDropdown");
         const currentLanguage = document.getElementById("currentLanguage");
 
-        // Accessibility
+        // ✅ Accessibility
         const accessibilityBtn = document.getElementById("accessibilityBtn");
         const accessibilityPanel = document.getElementById("accessibilityPanel");
         const vlibrasBtn = document.getElementById("vlibrasBtn");
 
-        // Translations
+        // ✅ Translations
         const translations = {
           pt: {
             currentLanguage: "Português"
@@ -993,7 +996,7 @@
           }
         };
 
-        // Function to add a message to the chat
+        // ✅ Função para adicionar mensagem no chat
         function addMessage(message, isUser = false) {
           const messageDiv = document.createElement("div");
           messageDiv.classList.add("message");
@@ -1003,12 +1006,13 @@
           chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // ✅ Função para processar input do usuário
+        // ✅ FUNÇÃO CORRIGIDA - Processa input do usuário
         async function processInput(input) {
             console.log('🔄 Enviando para API:', input);
 
             try {
-                const response = await fetch(`${BACKEND_URL}/perguntar`, {
+                // ✅ URL CORRETA - Backend no Render
+                const response = await fetch(BACKEND_URL + '/perguntar', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1018,21 +1022,31 @@
                     })
                 });
 
+                console.log('📥 Status da API:', response.status);
+                
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('✅ Resposta da API recebida:', data);
                     return data.resposta;
                 } else {
+                    console.error('❌ Erro na API:', response.status);
                     throw new Error('API error: ' + response.status);
                 }
-
+                
             } catch (error) {
                 console.error('❌ Erro na conexão:', error);
-
+                
+                // ✅ Fallback local se a API falhar
                 const fallbackResponses = {
-                    'python': '🐍 **Curso de Python - Jovem Programador**\n\nOferecemos um curso completo de Python!',
-                    'javascript': '⚡ **JavaScript Full Stack - Jovem Programador**\n\nAprenda JavaScript moderno!',
-                    'inscriç': '📝 **Inscrições Jovem Programador**\n\nPara se inscrever, visite: www.jovemprogramador.com.br',
-                    'default': '🤖 **404 Chatbot SENAC**\n\nPosso ajudar com informações sobre o Programa Jovem Programador!'
+                    'python': '🐍 **Curso de Python - Jovem Programador**\n\nOferecemos um curso completo de Python do básico ao avançado! **100% GRATUITO** com certificado! 🎓',
+                    'javascript': '⚡ **JavaScript Full Stack - Jovem Programador**\n\nAprenda JavaScript moderno, React e Node.js. **TOTALMENTE GRATUITO**! 🚀',
+                    'inscriç': '📝 **Inscrições Jovem Programador**\n\nPara se inscrever, visite: www.jovemprogramador.com.br\n📍 **Santa Catarina - Brasil**',
+                    'senac': '🏫 **SENAC - Jovem Programador**\n\nPrograma de capacitação tecnológica para jovens de Santa Catarina! 💻',
+                    '404': '🔍 **404 Not Found**\n\nMas não se preocupe! Posso ajudar com informações sobre o Programa Jovem Programador! 😊',
+                    'oi': '👋 **Olá! Sou o assistente 404 Not Found**\n\nPosso ajudar com informações sobre o Programa Jovem Programador! 🎯',
+                    'olá': '👋 **Olá! Sou o assistente 404 Not Found**\n\nPosso ajudar com informações sobre o Programa Jovem Programador! 🎯',
+                    'ola': '👋 **Olá! Sou o assistente 404 Not Found**\n\nPosso ajudar com informações sobre o Programa Jovem Programador! 🎯',
+                    'default': '🤖 **404 Chatbot SENAC - Jovem Programador**\n\nPosso ajudar com informações sobre cursos gratuitos de programação! Digite "Python", "JavaScript" ou "inscrições" para saber mais! 🎯'
                 };
 
                 for (const keyword in fallbackResponses) {
@@ -1045,13 +1059,14 @@
             }
         }
 
-        // Event listener for send button
+        // ✅ Event listener para botão enviar
         sendButton.addEventListener("click", async function () {
           const message = userInput.value.trim();
           if (message) {
             addMessage(message, true);
             userInput.value = "";
 
+            // Simula tempo de processamento
             setTimeout(async function () {
               const response = await processInput(message);
               addMessage(response);
@@ -1059,7 +1074,7 @@
           }
         });
 
-        // Event listener for Enter key
+        // ✅ Event listener para tecla Enter
         userInput.addEventListener("keypress", async function (e) {
           if (e.key === "Enter") {
             const message = userInput.value.trim();
@@ -1075,12 +1090,12 @@
           }
         });
 
-        // Language selector functionality
+        // ✅ Language selector functionality
         languageBtn.addEventListener("click", function () {
           languageDropdown.classList.toggle("show");
         });
 
-        // Close language dropdown when clicking outside
+        // ✅ Close language dropdown when clicking outside
         document.addEventListener("click", function (e) {
           if (
             !languageBtn.contains(e.target) &&
@@ -1090,7 +1105,7 @@
           }
         });
 
-        // Change language
+        // ✅ Change language
         document.querySelectorAll(".language-option").forEach((option) => {
           option.addEventListener("click", function () {
             const lang = this.getAttribute("data-lang");
@@ -1106,22 +1121,27 @@
           });
         });
 
-        // Function to change language
+        // ✅ Function to change language
         function changeLanguage(lang) {
-          currentLanguage.textContent = translations[lang].currentLanguage;
+          if (translations[lang]) {
+            currentLanguage.textContent = translations[lang].currentLanguage;
+          }
         }
 
-        // Accessibility panel toggle
+        // ✅ Global function for mobile language selector
+        window.changeLanguage = changeLanguage;
+
+        // ✅ Accessibility panel toggle
         accessibilityBtn.addEventListener("click", function () {
           accessibilityPanel.classList.toggle("open");
         });
 
-        // VLibras button
+        // ✅ VLibras button
         vlibrasBtn.addEventListener("click", function () {
           showCustomAlert("VLibras ativado! O widget de Libras está disponível no canto inferior esquerdo da tela.");
         });
 
-        // Custom alert function
+        // ✅ Custom alert function
         function showCustomAlert(message) {
           const modal = document.createElement('div');
           modal.className = 'fixed-modal';
@@ -1142,7 +1162,7 @@
           });
         }
 
-        // High contrast toggle
+        // ✅ High contrast toggle
         document.getElementById("high-contrast").addEventListener("change", function (e) {
           if (e.target.checked) {
             document.body.classList.add("high-contrast");
@@ -1151,7 +1171,7 @@
           }
         });
 
-        // Large text toggle
+        // ✅ Large text toggle
         document.getElementById("large-text").addEventListener("change", function (e) {
           if (e.target.checked) {
             document.body.classList.add("large-text");
@@ -1162,7 +1182,7 @@
           }
         });
 
-        // Add CSS for high contrast mode
+        // ✅ Add CSS for high contrast mode
         const style = document.createElement("style");
         style.textContent = `
           body.high-contrast {
@@ -1178,1815 +1198,255 @@
         `;
         document.head.appendChild(style);
       });
+      // const menuToggle = document.getElementById('menuToggle');
+      // const navLinks = document.getElementById('navLinks');
+
+      // if (menuToggle && navLinks) {
+      //     menuToggle.addEventListener('click', function() {
+      //         navLinks.classList.toggle('active');
+      //         const icon = menuToggle.querySelector('i');
+      //         if (navLinks.classList.contains('active')) {
+      //             icon.classList.remove('fa-bars');
+      //             icon.classList.add('fa-times');
+      //         } else {
+      //             icon.classList.remove('fa-times');
+      //             icon.classList.add('fa-bars');
+      //         }
+      //     });
+
+      //     document.querySelectorAll('.nav-links a').forEach(link => {
+      //         link.addEventListener('click', function() {
+      //             navLinks.classList.remove('active');
+      //             const icon = menuToggle.querySelector('i');
+      //             icon.classList.remove('fa-times');
+      //             icon.classList.add('fa-bars');
+      //         });
+      //     });
+      // }
+
+      // // Initialize VLibras
+      // document.addEventListener("DOMContentLoaded", function () {
+      //   if (typeof VLibras !== "undefined") {
+      //     new VLibras.Widget("https://vlibras.gov.br/app");
+      //   }
+      //   const BACKEND_URL = 'https://chatbot-jovemprogramador.onrender.com';
+      //   // const BACKEND_URL = 'http://localhost:5000';
+
+      //   // Chat functionality
+      //   const chatMessages = document.getElementById("chatMessages");
+      //   const userInput = document.getElementById("userInput");
+      //   const sendButton = document.getElementById("sendButton");
+
+      //   // Language selector
+      //   const languageBtn = document.getElementById("languageBtn");
+      //   const languageDropdown = document.getElementById("languageDropdown");
+      //   const currentLanguage = document.getElementById("currentLanguage");
+
+      //   // Accessibility
+      //   const accessibilityBtn = document.getElementById("accessibilityBtn");
+      //   const accessibilityPanel = document.getElementById("accessibilityPanel");
+      //   const vlibrasBtn = document.getElementById("vlibrasBtn");
+
+      //   // Translations
+      //   const translations = {
+      //     pt: {
+      //       currentLanguage: "Português"
+      //     },
+      //     en: {
+      //       currentLanguage: "English"
+      //     },
+      //     es: {
+      //       currentLanguage: "Español"
+      //     }
+      //   };
+
+      //   // Function to add a message to the chat
+      //   function addMessage(message, isUser = false) {
+      //     const messageDiv = document.createElement("div");
+      //     messageDiv.classList.add("message");
+      //     messageDiv.classList.add(isUser ? "user-message" : "bot-message");
+      //     messageDiv.textContent = message;
+      //     chatMessages.appendChild(messageDiv);
+      //     chatMessages.scrollTop = chatMessages.scrollHeight;
+      //   }
+
+      //   // ✅ Função para processar input do usuário
+      //   async function processInput(input) {
+      //       console.log('🔄 Enviando para API:', input);
+
+      //       try {
+      //           const response = await fetch(`${BACKEND_URL}/perguntar`, {
+      //               method: 'POST',
+      //               headers: {
+      //                   'Content-Type': 'application/json',
+      //               },
+      //               body: JSON.stringify({
+      //                   pergunta: input
+      //               })
+      //           });
+
+      //           if (response.ok) {
+      //               const data = await response.json();
+      //               return data.resposta;
+      //           } else {
+      //               throw new Error('API error: ' + response.status);
+      //           }
+
+      //       } catch (error) {
+      //           console.error('❌ Erro na conexão:', error);
+
+      //           const fallbackResponses = {
+      //               'python': '🐍 **Curso de Python - Jovem Programador**\n\nOferecemos um curso completo de Python!',
+      //               'javascript': '⚡ **JavaScript Full Stack - Jovem Programador**\n\nAprenda JavaScript moderno!',
+      //               'inscriç': '📝 **Inscrições Jovem Programador**\n\nPara se inscrever, visite: www.jovemprogramador.com.br',
+      //               'default': '🤖 **404 Chatbot SENAC**\n\nPosso ajudar com informações sobre o Programa Jovem Programador!'
+      //           };
+
+      //           for (const keyword in fallbackResponses) {
+      //               if (input.toLowerCase().includes(keyword)) {
+      //                   return fallbackResponses[keyword];
+      //               }
+      //           }
+
+      //           return fallbackResponses['default'];
+      //       }
+      //   }
+
+      //   // Event listener for send button
+      //   sendButton.addEventListener("click", async function () {
+      //     const message = userInput.value.trim();
+      //     if (message) {
+      //       addMessage(message, true);
+      //       userInput.value = "";
+
+      //       setTimeout(async function () {
+      //         const response = await processInput(message);
+      //         addMessage(response);
+      //       }, 1000);
+      //     }
+      //   });
+
+      //   // Event listener for Enter key
+      //   userInput.addEventListener("keypress", async function (e) {
+      //     if (e.key === "Enter") {
+      //       const message = userInput.value.trim();
+      //       if (message) {
+      //         addMessage(message, true);
+      //         userInput.value = "";
+
+      //         setTimeout(async function () {
+      //           const response = await processInput(message);
+      //           addMessage(response);
+      //         }, 1000);
+      //       }
+      //     }
+      //   });
+
+      //   // Language selector functionality
+      //   languageBtn.addEventListener("click", function () {
+      //     languageDropdown.classList.toggle("show");
+      //   });
+
+      //   // Close language dropdown when clicking outside
+      //   document.addEventListener("click", function (e) {
+      //     if (
+      //       !languageBtn.contains(e.target) &&
+      //       !languageDropdown.contains(e.target)
+      //     ) {
+      //       languageDropdown.classList.remove("show");
+      //     }
+      //   });
+
+      //   // Change language
+      //   document.querySelectorAll(".language-option").forEach((option) => {
+      //     option.addEventListener("click", function () {
+      //       const lang = this.getAttribute("data-lang");
+      //       changeLanguage(lang);
+      //       languageDropdown.classList.remove("show");
+
+      //       document.querySelectorAll(".language-option").forEach((opt) => {
+      //         opt.classList.remove("active");
+      //         opt.innerHTML = opt.textContent;
+      //       });
+      //       this.classList.add("active");
+      //       this.innerHTML = '<i class="fas fa-check"></i> ' + this.textContent;
+      //     });
+      //   });
+
+      //   // Function to change language
+      //   function changeLanguage(lang) {
+      //     currentLanguage.textContent = translations[lang].currentLanguage;
+      //   }
+
+      //   // Accessibility panel toggle
+      //   accessibilityBtn.addEventListener("click", function () {
+      //     accessibilityPanel.classList.toggle("open");
+      //   });
+
+      //   // VLibras button
+      //   vlibrasBtn.addEventListener("click", function () {
+      //     showCustomAlert("VLibras ativado! O widget de Libras está disponível no canto inferior esquerdo da tela.");
+      //   });
+
+      //   // Custom alert function
+      //   function showCustomAlert(message) {
+      //     const modal = document.createElement('div');
+      //     modal.className = 'fixed-modal';
+      //     modal.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 9999;';
+      //     modal.innerHTML = `
+      //       <div style="background: var(--bg-light); padding: 2rem; border-radius: 1rem; max-width: 400px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid var(--border);">
+      //         <p style="color: var(--text); margin-bottom: 1.5rem; line-height: 1.6;">${message}</p>
+      //         <button onclick="this.closest('.fixed-modal').remove()" style="background: var(--gradient); color: white; border: none; padding: 0.75rem 2rem; border-radius: 2rem; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.3s;">
+      //           OK
+      //         </button>
+      //       </div>
+      //     `;
+      //     document.body.appendChild(modal);
+      //     modal.addEventListener('click', function(e) {
+      //       if (e.target === modal) {
+      //         modal.remove();
+      //       }
+      //     });
+      //   }
+
+      //   // High contrast toggle
+      //   document.getElementById("high-contrast").addEventListener("change", function (e) {
+      //     if (e.target.checked) {
+      //       document.body.classList.add("high-contrast");
+      //     } else {
+      //       document.body.classList.remove("high-contrast");
+      //     }
+      //   });
+
+      //   // Large text toggle
+      //   document.getElementById("large-text").addEventListener("change", function (e) {
+      //     if (e.target.checked) {
+      //       document.body.classList.add("large-text");
+      //       document.documentElement.style.fontSize = "18px";
+      //     } else {
+      //       document.body.classList.remove("large-text");
+      //       document.documentElement.style.fontSize = "";
+      //     }
+      //   });
+
+      //   // Add CSS for high contrast mode
+      //   const style = document.createElement("style");
+      //   style.textContent = `
+      //     body.high-contrast {
+      //       --bg: #000000;
+      //       --text: #ffffff;
+      //       --text-light: #cccccc;
+      //       --card-bg: #222222;
+      //       --border: #ffffff;
+      //       --primary: #ffff00;
+      //       --primary-dark: #cccc00;
+      //       --primary-light: #ffff99;
+      //     }
+      //   `;
+      //   document.head.appendChild(style);
+      // });
     </script>
   </body>
 </html>
-
-
-<!-- <!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jovem Programador - Sua Jornada na Programação</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
-      defer
-    ></script>
-    <!- VLibras Oficial ->
-    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-    <style>
-      :root {
-        --primary: #9d4dff;
-        --primary-dark: #7b2cbf;
-        --primary-light: #c77dff;
-        --secondary: #00d4ff;
-        --accent: #ff6b6b;
-        --gradient: linear-gradient(
-          135deg,
-          var(--primary),
-          var(--primary-dark)
-        );
-        --bg: #0f0c29;
-        --bg-light: #1a1538;
-        --card-bg: rgba(157, 77, 255, 0.08);
-        --text: #ffffff;
-        --text-light: #e0aaff;
-        --border: rgba(157, 77, 255, 0.3);
-        --shadow: 0 25px 50px rgba(157, 77, 255, 0.15);
-        --glow: 0 0 20px rgba(157, 77, 255, 0.4);
-        --error: #ff6d6d;
-        --success: #4ade80;
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.6;
-        overflow-x: hidden;
-      }
-
-      /* Header */
-      header {
-        background: rgba(15, 12, 41, 0.9);
-        backdrop-filter: blur(10px);
-        position: fixed;
-        width: 100%;
-        z-index: 1000;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 5%;
-        max-width: 1400px;
-        margin: 0 auto;
-        position: relative;
-      }
-
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .logo h1 {
-        font-size: 1.8rem;
-        font-weight: 700;
-        background: var(--gradient);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 2rem;
-      }
-
-      .nav-links a {
-        color: var(--text-light);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s;
-      }
-
-      .nav-links a:hover {
-        color: var(--primary-light);
-      }
-
-      /* ✅ BOTÃO MENU HAMBÚRGUER */
-      .menu-toggle {
-        display: none;
-        background: none;
-        border: none;
-        color: var(--text-light);
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 0.5rem;
-      }
-
-      .cta-button {
-        background: var(--gradient);
-        color: white;
-        border: none;
-        padding: 0.7rem 1.5rem;
-        border-radius: 2rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        box-shadow: 0 0 15px rgba(157, 77, 255, 0.5);
-      }
-
-      .cta-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0 20px rgba(157, 77, 255, 0.7);
-      }
-
-      /* ✅ BOTÃO COMEÇAR AGORA PARA MOBILE */
-      .mobile-cta {
-        display: none;
-      }
-
-      /* Language Selector */
-      .language-selector {
-        position: relative;
-        margin-right: 1rem;
-      }
-
-      .language-btn {
-        background: transparent;
-        color: var(--text-light);
-        border: 1px solid var(--border);
-        padding: 0.5rem 1rem;
-        border-radius: 2rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.3s;
-      }
-
-      .language-btn:hover {
-        background: rgba(157, 77, 255, 0.1);
-      }
-
-      .language-dropdown {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background: var(--bg-light);
-        border: 1px solid var(--border);
-        border-radius: 0.5rem;
-        padding: 0.5rem 0;
-        min-width: 150px;
-        display: none;
-        z-index: 1001;
-      }
-
-      .language-dropdown.show {
-        display: block;
-      }
-
-      .language-option {
-        padding: 0.7rem 1rem;
-        cursor: pointer;
-        transition: background 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .language-option:hover {
-        background: rgba(157, 77, 255, 0.1);
-      }
-
-      .language-option.active {
-        color: var(--primary-light);
-        font-weight: 600;
-      }
-
-      /* Hero Section */
-      .hero {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        padding: 100px 5% 0; /* ✅ CORRIGIDO: padding-top para header */
-        background: radial-gradient(
-            circle at 10% 20%,
-            rgba(157, 77, 255, 0.15) 0%,
-            transparent 25%
-          ),
-          radial-gradient(
-            circle at 90% 80%,
-            rgba(157, 77, 255, 0.15) 0%,
-            transparent 25%
-          );
-        position: relative;
-        overflow: hidden;
-      }
-
-      .hero-content {
-        max-width: 1400px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 3rem;
-        align-items: center;
-      }
-
-      .hero-text h2 {
-        font-size: 3.5rem;
-        font-weight: 800;
-        line-height: 1.2;
-        margin-bottom: 1.5rem;
-      }
-
-      .hero-text h2 span {
-        background: var(--gradient);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-      }
-
-      .hero-text p {
-        font-size: 1.2rem;
-        color: var(--text-light);
-        margin-bottom: 2rem;
-      }
-
-      .hero-buttons {
-        display: flex;
-        gap: 1rem;
-      }
-
-      .secondary-button {
-        background: transparent;
-        color: var(--text);
-        border: 2px solid var(--border);
-        padding: 0.7rem 1.5rem;
-        border-radius: 2rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-
-      .secondary-button:hover {
-        background: rgba(157, 77, 255, 0.1);
-        border-color: var(--primary-light);
-      }
-
-      .hero-image {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .hero-image img {
-        max-width: 100%;
-        border-radius: 1rem;
-        box-shadow: var(--shadow);
-      }
-
-      /* Features Section */
-      .features {
-        padding: 6rem 5%;
-        background: var(--bg-light);
-      }
-
-      .section-title {
-        text-align: center;
-        margin-bottom: 4rem;
-      }
-
-      .section-title h2 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-      }
-
-      .section-title p {
-        color: var(--text-light);
-        max-width: 600px;
-        margin: 0 auto;
-      }
-
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        max-width: 1400px;
-        margin: 0 auto;
-      }
-
-      .feature-card {
-        background: var(--card-bg);
-        backdrop-filter: blur(10px);
-        border-radius: 1rem;
-        padding: 2rem;
-        border: 1px solid var(--border);
-        transition: transform 0.3s, box-shadow 0.3s;
-      }
-
-      .feature-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow);
-      }
-
-      .feature-icon {
-        width: 60px;
-        height: 60px;
-        background: var(--gradient);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.5rem;
-      }
-
-      .feature-icon i {
-        font-size: 1.5rem;
-        color: white;
-      }
-
-      .feature-card h3 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-      }
-
-      .feature-card p {
-        color: var(--text-light);
-      }
-
-      /* Chat Section */
-      .chat-section {
-        padding: 6rem 5%;
-        background: var(--bg);
-      }
-
-      .chat-container {
-        max-width: 1000px;
-        margin: 0 auto;
-        background: var(--card-bg);
-        backdrop-filter: blur(10px);
-        border-radius: 1.5rem;
-        overflow: hidden;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow);
-      }
-
-      .chat-header {
-        background: var(--gradient);
-        padding: 1.5rem;
-        text-align: center;
-      }
-
-      .chat-header h3 {
-        font-size: 1.5rem;
-      }
-
-      .chat-messages {
-        height: 400px;
-        overflow-y: auto;
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .message {
-        max-width: 80%;
-        padding: 1rem;
-        border-radius: 1rem;
-        position: relative;
-      }
-
-      .user-message {
-        align-self: flex-end;
-        background: var(--primary);
-        color: white;
-      }
-
-      .bot-message {
-        align-self: flex-start;
-        background: var(--bg-light);
-        border: 1px solid var(--border);
-      }
-
-      .chat-input {
-        display: flex;
-        padding: 1.5rem;
-        border-top: 1px solid var(--border);
-      }
-
-      .chat-input input {
-        flex: 1;
-        padding: 0.9rem 1.5rem;
-        border: 2px solid var(--border);
-        border-radius: 3rem;
-        font-size: 1rem;
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--text);
-        outline: none;
-      }
-
-      .chat-input input:focus {
-        border-color: var(--primary-light);
-        box-shadow: 0 0 0 3px rgba(157, 77, 255, 0.3);
-      }
-
-      .chat-input button {
-        margin-left: 1rem;
-        padding: 0 1.8rem;
-        background: var(--gradient);
-        color: white;
-        border: none;
-        border-radius: 3rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-
-      .chat-input button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0 15px rgba(157, 77, 255, 0.5);
-      }
-
-      /* Footer */
-      footer {
-        background: var(--bg-light);
-        padding: 4rem 5% 2rem;
-        border-top: 1px solid var(--border);
-      }
-
-      .footer-content {
-        max-width: 1400px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 3rem;
-      }
-
-      .footer-column h4 {
-        font-size: 1.2rem;
-        margin-bottom: 1.5rem;
-        color: var(--primary-light);
-      }
-
-      .footer-column ul {
-        list-style: none;
-      }
-
-      .footer-column ul li {
-        margin-bottom: 0.8rem;
-      }
-
-      .footer-column a {
-        color: var(--text-light);
-        text-decoration: none;
-        transition: color 0.3s;
-      }
-
-      .footer-column a:hover {
-        color: var(--primary-light);
-      }
-
-      .social-links {
-        display: flex;
-        gap: 1rem;
-        margin-top: 1.5rem;
-      }
-
-      .social-links a {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: var(--card-bg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s;
-      }
-
-      .social-links a:hover {
-        background: var(--primary);
-        transform: translateY(-3px);
-      }
-
-      .copyright {
-        text-align: center;
-        margin-top: 3rem;
-        padding-top: 2rem;
-        border-top: 1px solid var(--border);
-        color: var(--text-light);
-      }
-
-      /* Accessibility */
-      .accessibility-btn {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: var(--gradient);
-        color: white;
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        cursor: pointer;
-        z-index: 1000;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s;
-      }
-
-      .accessibility-btn:hover {
-        transform: scale(1.1);
-      }
-
-      .accessibility-panel {
-        position: fixed;
-        bottom: 5rem;
-        right: 2rem;
-        background: var(--card-bg);
-        backdrop-filter: blur(12px);
-        border-radius: 1rem;
-        padding: 1.5rem;
-        box-shadow: var(--shadow);
-        border: 1px solid var(--border);
-        z-index: 999;
-        width: 300px;
-        transform: translateY(20px);
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s;
-      }
-
-      .accessibility-panel.open {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .accessibility-panel h3 {
-        margin-bottom: 1rem;
-        color: var(--primary-light);
-      }
-
-      .accessibility-option {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-      }
-
-      .vlibras-btn {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: var(--gradient);
-        color: white;
-        border: none;
-        border-radius: 2rem;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        margin-top: 0.5rem;
-        width: 100%;
-        justify-content: center;
-      }
-
-      /* Modal Styles */
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 2000;
-        backdrop-filter: blur(5px);
-      }
-
-      .modal-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: var(--bg-light);
-        padding: 2rem;
-        border-radius: 1rem;
-        border: 1px solid var(--border);
-        max-width: 500px;
-        width: 90%;
-        box-shadow: var(--shadow);
-      }
-
-      .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-      }
-
-      .close-modal {
-        background: none;
-        border: none;
-        color: var(--text-light);
-        font-size: 1.5rem;
-        cursor: pointer;
-      }
-
-      .course-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
-      }
-
-      .course-card {
-        background: var(--card-bg);
-        padding: 1rem;
-        border-radius: 0.5rem;
-        border: 1px solid var(--border);
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-
-      .course-card:hover {
-        transform: translateY(-2px);
-        border-color: var(--primary);
-      }
-
-      /* ✅ SELETOR DE IDIOMAS MOBILE */
-      .mobile-language-selector {
-        padding: 1rem 5%;
-        border-bottom: 1px solid var(--border);
-        display: none;
-      }
-
-      .mobile-language-selector h4 {
-        color: var(--primary-light);
-        margin-bottom: 0.8rem;
-        font-size: 1rem;
-      }
-
-      .mobile-language-selector .language-option {
-        padding: 0.8rem 1rem;
-        cursor: pointer;
-        transition: background 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        border-radius: 0.5rem;
-        margin-bottom: 0.5rem;
-        color: var(--text-light);
-      }
-
-      .mobile-language-selector .language-option:hover {
-        background: rgba(157, 77, 255, 0.1);
-      }
-
-      .mobile-language-selector .language-option.active {
-        color: var(--primary-light);
-        font-weight: 600;
-        background: rgba(157, 77, 255, 0.15);
-      }
-
-      .mobile-language-selector .language-option i {
-        font-size: 0.9rem;
-        width: 16px;
-      }
-
-      /* ✅ RESPONSIVE CORRIGIDO */
-      @media (max-width: 1024px) {
-        .hero-content {
-          grid-template-columns: 1fr;
-          text-align: center;
-        }
-
-        .hero-buttons {
-          justify-content: center;
-        }
-
-        /* ✅ MENU RESPONSIVO CORRIGIDO */
-        .nav-links {
-          display: none;
-          flex-direction: column;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          width: 100%;
-          background: var(--bg-light);
-          backdrop-filter: blur(20px);
-          border-top: 1px solid var(--border);
-          padding: 1rem 0;
-          gap: 0;
-          z-index: 1001;
-        }
-
-        .nav-links.active {
-          display: flex;
-        }
-
-        .nav-links a {
-          padding: 1rem 5%;
-          border-bottom: 1px solid var(--border);
-          width: 100%;
-          text-align: left;
-        }
-
-        /* ✅ BOTÃO COMEÇAR AGORA NO MENU MOBILE */
-        .mobile-cta {
-          display: block;
-          background: var(--gradient);
-          color: white !important;
-          border-radius: 2rem;
-          margin: 1rem;
-          text-align: center;
-          font-weight: 600;
-          padding: 0.8rem 1.5rem;
-          box-shadow: 0 0 15px rgba(157, 77, 255, 0.5);
-        }
-
-        /* ✅ ESCONDE BOTÃO DESKTOP NO MOBILE */
-        .cta-button {
-          display: none;
-        }
-
-        /* ✅ ESCONDE LANGUAGE SELECTOR NO MOBILE */
-        .language-selector {
-          display: none;
-        }
-
-        .language-selector {
-          margin-right: 0;
-        }
-
-        /* ✅ BOTÃO MENU HAMBÚRGUER VISÍVEL */
-        .menu-toggle {
-          display: flex;
-        }
-
-        /* ✅ AJUSTE HEADER PARA MOBILE */
-        .hero {
-          padding-top: 90px;
-          min-height: calc(100vh - 90px);
-        }
-
-        /* ✅ MOSTRA O SELETOR DE IDIOMAS NO MOBILE */
-        .mobile-language-selector {
-          display: block;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .hero-text h2 {
-          font-size: 2rem;
-        }
-
-        .features-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .message {
-          max-width: 90%;
-        }
-
-        .accessibility-panel {
-          width: 280px;
-          right: 1rem;
-        }
-
-        .navbar {
-          padding: 0.8rem 1rem;
-        }
-
-        .logo h1 {
-          font-size: 1.3rem;
-        }
-
-        /* ✅ CORREÇÃO DEFINITIVA PARA MOBILE */
-        .hero {
-          padding-top: 80px;
-          min-height: calc(100vh - 80px);
-        }
-
-        .hero-text h2 {
-          font-size: 1.8rem;
-          margin-top: 0.5rem;
-        }
-
-        /* ✅ MENU MOBILE MELHORADO */
-        .nav-links {
-          padding: 0.5rem 0;
-        }
-
-        .nav-links a {
-          padding: 0.8rem 5%;
-        }
-
-        .mobile-cta {
-          margin: 0.8rem 1rem;
-          padding: 0.7rem 1.2rem;
-          font-size: 0.9rem;
-        }
-
-        .menu-toggle {
-          font-size: 1.3rem;
-        }
-
-        /* ✅ AJUSTES PARA O SELETOR DE IDIOMAS NO MOBILE */
-        .mobile-language-selector {
-          padding: 0.8rem 5%;
-        }
-        
-        .mobile-language-selector h4 {
-          font-size: 0.9rem;
-          margin-bottom: 0.6rem;
-        }
-        
-        .mobile-language-selector .language-option {
-          padding: 0.6rem 0.8rem;
-          font-size: 0.9rem;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .hero-text h2 {
-          font-size: 1.6rem;
-        }
-
-        .logo h1 {
-          font-size: 1.1rem;
-        }
-
-        .navbar {
-          padding: 0.6rem 1rem;
-        }
-
-        .hero {
-          padding-top: 70px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!- Header ->
-    <header>
-      <nav class="navbar">
-        <div class="logo">
-          <i class="fas fa-code"></i>
-          <h1>Jovem Programador</h1>
-        </div>
-        
-        <!- ✅ BOTÃO MENU HAMBÚRGUER ADICIONADO ->
-        <button class="menu-toggle" id="menuToggle">
-          <i class="fas fa-bars"></i>
-        </button>
-        
-        <div class="nav-links" id="navLinks">
-          <a href="#home">Início</a>
-          <a href="#features">Cursos</a>
-          <a href="#chat">Chat IA</a>
-          <a href="#about">Sobre</a>
-          
-          <!- ✅ SELETOR DE IDIOMAS PARA MOBILE ->
-          <div class="mobile-language-selector">
-            <h4>Idioma/Language</h4>
-            <div class="language-option active" data-lang="pt" onclick="changeLanguage('pt')">
-              <i class="fas fa-check"></i>
-              Português
-            </div>
-            <div class="language-option" data-lang="en" onclick="changeLanguage('en')">
-              English
-            </div>
-            <div class="language-option" data-lang="es" onclick="changeLanguage('es')">
-              Español
-            </div>
-            <div class="language-option" data-lang="it" onclick="changeLanguage('it')">
-              Italiano
-            </div>
-          </div>
-          
-          <!-✅ BOTÃO "COMEÇAR AGORA" ADICIONADO NO MENU MOBILE ->
-          <a href="https://www.jovemprogramador.com.br/inscricoes-jovem-programador/" class="mobile-cta" target="_blank">Inscreva-se</a>
-        </div>
-        
-        <div class="language-selector">
-          <button class="language-btn" id="languageBtn">
-            <i class="fas fa-globe"></i>
-            <span id="currentLanguage">Português</span>
-            <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="language-dropdown" id="languageDropdown">
-            <div class="language-option active" data-lang="pt">
-              <i class="fas fa-check"></i>
-              Português
-            </div>
-            <div class="language-option" data-lang="en">English</div>
-            <div class="language-option" data-lang="es">Español</div>
-            
-          </div>
-        </div>
-        
-         ✅ BOTÃO "COMEÇAR AGORA" PARA DESKTOP ->
-        <button class="cta-button" onclick="window.location.href='https://www.jovemprogramador.com.br/inscricoes-jovem-programador/'">Inscreva-se</button>
-      </nav>
-    </header>
-
-    <!- Hero Section ->
-    <section class="hero" id="home">
-      <div class="hero-content">
-        <div class="hero-text">
-          <h2 data-translate="hero_title">
-            Sua <span>Jornada</span> na Programação Começa Aqui
-          </h2>
-          <p data-translate="hero_subtitle">
-            Aprenda programação do zero ao avançado com nossa plataforma
-            interativa. Cursos, projetos práticos e suporte da comunidade.
-          </p>
-          <div class="hero-buttons">
-            <button class="cta-button" onclick="openCoursesModal()" data-translate="cta_explore">
-              Explorar Cursos
-            </button>
-            <button class="secondary-button" onclick="openAboutModal()" data-translate="cta_learn_more">
-              Saiba Mais
-            </button>
-          </div>
-        </div>
-        <div class="hero-image">
-          <img
-            src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-            alt="Programação"
-          />
-        </div>
-      </div>
-    </section>
-
-    <!- Features Section ->
-    <section class="features" id="features">
-      <div class="section-title">
-        <h2 data-translate="features_title">O Que Oferecemos</h2>
-        <p data-translate="features_subtitle">
-          Descubra todos os recursos que vão impulsionar sua carreira na
-          programação
-        </p>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-laptop-code"></i>
-          </div>
-          <h3 data-translate="feature1_title">Cursos Completos</h3>
-          <p data-translate="feature1_desc">
-            Aprenda com cursos estruturados do básico ao avançado em diversas
-            tecnologias e linguagens de programação.
-          </p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-project-diagram"></i>
-          </div>
-          <h3 data-translate="feature2_title">Projetos Práticos</h3>
-          <p data-translate="feature2_desc">
-            Desenvolva projetos reais que vão compor seu portfólio e te preparar
-            para o mercado de trabalho.
-          </p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-users"></i>
-          </div>
-          <h3 data-translate="feature3_title">Comunidade Ativa</h3>
-          <p data-translate="feature3_desc">
-            Participe de uma comunidade de milhares de estudantes e
-            programadores para trocar experiências e conhecimentos.
-          </p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-graduation-cap"></i>
-          </div>
-          <h3 data-translate="feature4_title">Certificação</h3>
-          <p data-translate="feature4_desc">
-            Receba certificados reconhecidos pelo mercado após a conclusão de
-            cada curso e projeto.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!- Chat Section ->
-    <section class="chat-section" id="chat">
-      <div class="section-title">
-        <h2 data-translate="chat_title">Chat IA - Jovem Programador</h2>
-        <p data-translate="chat_subtitle">
-          Tire suas dúvidas sobre programação com nossa inteligência artificial
-          especializada
-        </p>
-      </div>
-      <div class="chat-container">
-        <div class="chat-header">
-          <h3 data-translate="chat_header">
-            Assistente Virtual Jovem Programador
-          </h3>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-          <div class="message bot-message" data-translate="chat_welcome">
-            Olá! Sou o assistente do Jovem Programador. Como posso ajudar você
-            hoje com suas dúvidas sobre programação?
-          </div>
-        </div>
-        <div class="chat-input">
-          <input
-            type="text"
-            id="userInput"
-            data-translate="chat_placeholder"
-            placeholder="Digite sua pergunta sobre programação..."
-          />
-          <button id="sendButton" data-translate="chat_send">Enviar</button>
-        </div>
-      </div>
-    </section>
-
-    <!- Footer ->
-    <footer id="about">
-      <div class="footer-content">
-        <div class="footer-column">
-          <h4 data-translate="footer_title">Jovem Programador</h4>
-          <p data-translate="footer_desc">
-            Sua plataforma completa para aprender programação e desenvolver
-            habilidades para o mercado de tecnologia.
-          </p>
-          <div class="social-links">
-    <a href="https://www.facebook.com/programajovemprogramador" target="_blank" title="Facebook">
-        <i class="fab fa-facebook-f"></i>
-    </a>
-    <a href="https://www.instagram.com/programa_jovemprogramador/" target="_blank" title="Instagram">
-        <i class="fab fa-instagram"></i>
-    </a>
-    <a href="https://www.tiktok.com/@jovemprogramador_sc" target="_blank" title="TikTok">
-        <i class="fab fa-tiktok"></i>
-    </a>
-    <a href="https://www.linkedin.com/company/programajovemprogramador/" target="_blank" title="LinkedIn">
-        <i class="fab fa-linkedin-in"></i>
-    </a>
-    <a href="https://www.jovemprogramador.com.br/" target="_blank" title="Site Oficial">
-        <i class="fas fa-globe"></i>
-    </a>
-    <a href="https://github.com/jovemprogramador" target="_blank" title="GitHub">
-        <i class="fab fa-github"></i>
-    </a>
-</div>
-        </div>
-        <div class="footer-column">
-          <h4 data-translate="courses_title"></h4>
-          <ul>
-            <li>
-              <a href="#" data-translate="course1"></a>
-            </li>
-            <li><a href="#" data-translate="course2"></a></li>
-            <li><a href="#" data-translate="course3"></a></li>
-            <li><a href="#" data-translate="course4"></a></li>
-            <li><a href="#" data-translate="course5"></a></li>
-          </ul>
-        </div>
-        <div class="footer-column">
-          <h4 data-translate="resources_title"></h4>
-          <ul>
-            <li><a href="#" data-translate="resource1"></a></li>
-            <li><a href="#" data-translate="resource2"></a></li>
-            <li><a href="#" data-translate="resource3"></a></li>
-            <li><a href="#" data-translate="resource4"></a></li>
-            <li><a href="#" data-translate="resource5"></a></li>
-          </ul>
-        </div>
-        <div class="footer-column">
-          <h4 data-translate="contact_title">Contato</h4>
-          <ul>
-            <li>
-              <i class="fas fa-envelope"></i> contato@jovemprogramador.com
-            </li>
-            <li><i class="fas fa-phone"></i> (48) 9999-9999</li>
-            <li><i class="fas fa-map-marker-alt"></i>  Santa Catarina-Brasil</li>
-          </ul>
-        </div>
-      </div>
-      <div class="copyright">
-        <p data-translate="copyright">
-          &copy; 2023 Jovem Programador. Todos os direitos reservados.
-        </p>
-      </div>
-    </footer>
-
-    <!- Accessibility Button ->
-    <button class="accessibility-btn" id="accessibilityBtn">
-      <i class="fas fa-universal-access"></i>
-    </button>
-
-    <!- Accessibility Panel ->
-    <div class="accessibility-panel" id="accessibilityPanel">
-      <h3 data-translate="accessibility_title">Acessibilidade</h3>
-      <div class="accessibility-option">
-        <input type="checkbox" id="high-contrast" />
-        <label for="high-contrast" data-translate="high_contrast"
-          >Alto Contraste</label
-        >
-      </div>
-      <div class="accessibility-option">
-        <input type="checkbox" id="large-text" />
-        <label for="large-text" data-translate="large_text">Texto Grande</label>
-      </div>
-      <button class="vlibras-btn" id="vlibrasBtn">
-        <i class="fas fa-sign-language"></i>
-        <span data-translate="vlibras_btn">Ativar VLibras</span>
-      </button>
-    </div>
-
-    <!- Modals ->
-    <div id="coursesModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>🎓 Nossos Cursos</h3>
-          <button class="close-modal" onclick="closeCoursesModal()">&times;</button>
-        </div>
-        <p>Escolha uma tecnologia para saber mais:</p>
-        <div class="course-grid">
-          <div class="course-card" onclick="askAboutCourse('Python')">
-            <h4>🐍 Python</h4>
-            <p>Do zero ao avançado</p>
-          </div>
-          <div class="course-card" onclick="askAboutCourse('JavaScript')">
-            <h4>⚡ JavaScript</h4>
-            <p>Full Stack</p>
-          </div>
-          <div class="course-card" onclick="askAboutCourse('React')">
-            <h4>⚛️ React</h4>
-            <p>Frontend moderno</p>
-          </div>
-          <div class="course-card" onclick="askAboutCourse('Node.js')">
-            <h4>🚀 Node.js</h4>
-            <p>Backend JavaScript</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="aboutModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>ℹ️ Sobre o Jovem Programador</h3>
-          <button class="close-modal" onclick="closeAboutModal()">&times;</button>
-        </div>
-        <p><strong>🎯 Nossa Missão:</strong></p>
-        <p>Democratizar o ensino de programação no Brasil, formando a próxima geração de desenvolvedores.</p>
-        
-        <p><strong>📚 Metodologia:</strong></p>
-        <ul>
-          <li>Aprendizado baseado em projetos reais</li>
-          <li>Mentoria individualizada</li>
-          <li>Comunidade ativa 24/7</li>
-          <li>Foco em empregabilidade</li>
-        </ul>
-        
-        <p><strong>💼 Resultados:</strong></p>
-        <p>95% dos nossos alunos conseguem emprego em até 6 meses após a conclusão do curso.</p>
-      </div>
-    </div>
-
-    <div id="signupModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>🚀 Comece Agora!</h3>
-          <button class="close-modal" onclick="closeSignupModal()">&times;</button>
-        </div>
-        <p><strong>Escolha seu plano:</strong></p>
-        <div style="margin: 1.5rem 0;">
-          <div style="background: var(--card-bg); padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; border: 1px solid var(--border);">
-            <h4>🎓 Plano Básico - GRATUITO</h4>
-            <p>✓ Todos os cursos<br>✓ Comunidade Discord<br>✓ Certificados</p>
-          </div>
-          <div style="background: var(--card-bg); padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; border: 2px solid var(--primary);">
-            <h4>🚀 Plano Pro - GRATUITO</h4>
-            <p>✓ Todos os benefícios do Básico<br>✓ Mentoria individual<br>✓ Code review</p>
-          </div>
-        </div>
-        <p><em>💡 Dica: Todos os nossos cursos são gratuitos! Comece agora mesmo.</em></p>
-      </div>
-    </div>
-
-    <!-VLibras Widget ->
-    <div vw class="enabled">
-      <div vw-access-button class="active"></div>
-      <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-      </div>
-    </div>
-
-    <script>
-      // ✅ MENU MOBILE TOGGLE - ADICIONADO NO INÍCIO
-      const menuToggle = document.getElementById('menuToggle');
-      const navLinks = document.getElementById('navLinks');
-
-      if (menuToggle && navLinks) {
-          menuToggle.addEventListener('click', function() {
-              navLinks.classList.toggle('active');
-              // Altera o ícone
-              const icon = menuToggle.querySelector('i');
-              if (navLinks.classList.contains('active')) {
-                  icon.classList.remove('fa-bars');
-                  icon.classList.add('fa-times');
-              } else {
-                  icon.classList.remove('fa-times');
-                  icon.classList.add('fa-bars');
-              }
-          });
-
-          // Fecha o menu ao clicar em um link
-          document.querySelectorAll('.nav-links a').forEach(link => {
-              link.addEventListener('click', function() {
-                  navLinks.classList.remove('active');
-                  const icon = menuToggle.querySelector('i');
-                  icon.classList.remove('fa-times');
-                  icon.classList.add('fa-bars');
-              });
-          });
-
-          // Fecha o menu ao redimensionar a tela para desktop
-          window.addEventListener('resize', function() {
-              if (window.innerWidth > 1024) {
-                  navLinks.classList.remove('active');
-                  const icon = menuToggle.querySelector('i');
-                  icon.classList.remove('fa-times');
-                  icon.classList.add('fa-bars');
-              }
-          });
-      }
-
-      // Initialize VLibras
-      document.addEventListener("DOMContentLoaded", function () {
-        // Initialize VLibras widget
-        if (typeof VLibras !== "undefined") {
-          new VLibras.Widget("https://vlibras.gov.br/app");
-        }
-
-        const BACKEND_URL = 'http://localhost:5000';
-
-        // const BACKEND_URL = 'https://chatbot-jovemprogramador.onrender.com';
-        
-        // Chat functionality
-        const chatMessages = document.getElementById("chatMessages");
-        const userInput = document.getElementById("userInput");
-        const sendButton = document.getElementById("sendButton");
-
-        // Language selector
-        const languageBtn = document.getElementById("languageBtn");
-        const languageDropdown = document.getElementById("languageDropdown");
-        const currentLanguage = document.getElementById("currentLanguage");
-
-        // Accessibility
-        const accessibilityBtn = document.getElementById("accessibilityBtn");
-        const accessibilityPanel =
-          document.getElementById("accessibilityPanel");
-        const vlibrasBtn = document.getElementById("vlibrasBtn");
-
-        // Translations
-        const translations = {
-          pt: {
-            hero_title: "Sua <span>Jornada</span> na Programação Começa Aqui",
-            hero_subtitle:
-              "Aprenda programação do zero ao avançado com nossa plataforma interativa. Cursos, projetos práticos e suporte da comunidade.",
-            cta_explore: "Explorar Cursos",
-            cta_learn_more: "Saiba Mais",
-            features_title: "O Que Oferecemos",
-            features_subtitle:
-              "Descubra todos os recursos que vão impulsionar sua carreira na programação",
-            feature1_title: "Cursos Completos",
-            feature1_desc:
-              "Aprenda com cursos estruturados do básico ao avançado em diversas tecnologias e linguagens de programação.",
-            feature2_title: "Projetos Práticos",
-            feature2_desc:
-              "Desenvolva projetos reais que vão compor seu portfólio e te preparar para o mercado de trabalho.",
-            feature3_title: "Comunidade Ativa",
-            feature3_desc:
-              "Participe de uma comunidade de milhares de estudantes e programadores para trocar experiências e conhecimentos.",
-            feature4_title: "Certificação",
-            feature4_desc:
-              "Receba certificados reconhecidos pelo mercado após a conclusão de cada curso e projeto.",
-            chat_title: "Chat IA - Jovem Programador",
-            chat_subtitle:
-              "Tire suas dúvidas sobre programação com nossa inteligência artificial especializada",
-            chat_header: "Assistente Virtual Jovem Programador",
-            chat_welcome:
-              "Olá! Sou o assistente do Jovem Programador. Como posso ajudar você hoje com suas dúvidas sobre programação?",
-            chat_placeholder: "Digite sua pergunta sobre programação...",
-            chat_send: "Enviar",
-            footer_title: "Jovem Programador",
-            footer_desc:
-              "Sua plataforma completa para aprender programação e desenvolver habilidades para o mercado de tecnologia.",
-            courses_title: "Cursos",
-            course1: "Desenvolvimento Web",
-            course2: "JavaScript",
-            course3: "Python",
-            course4: "React",
-            course5: "Node.js",
-            resources_title: "Recursos",
-            resource1: "Blog",
-            resource2: "Tutoriais",
-            resource3: "Projetos",
-            resource4: "Comunidade",
-            resource5: "Suporte",
-            contact_title: "Contato",
-            copyright:
-              "&copy; 2023 Jovem Programador. Todos os direitos reservados.",
-            accessibility_title: "Acessibilidade",
-            high_contrast: "Alto Contraste",
-            large_text: "Texto Grande",
-            vlibras_btn: "Ativar VLibras",
-          },
-          en: {
-            hero_title: "Your Programming <span>Journey</span> Starts Here",
-            hero_subtitle:
-              "Learn programming from zero to advanced with our interactive platform. Courses, practical projects and community support.",
-            cta_explore: "Explore Courses",
-            cta_learn_more: "Learn More",
-            features_title: "What We Offer",
-            features_subtitle:
-              "Discover all the resources that will boost your programming career",
-            feature1_title: "Complete Courses",
-            feature1_desc:
-              "Learn with structured courses from basic to advanced in various technologies and programming languages.",
-            feature2_title: "Practical Projects",
-            feature2_desc:
-              "Develop real projects that will compose your portfolio and prepare you for the job market.",
-            feature3_title: "Active Community",
-            feature3_desc:
-              "Join a community of thousands of students and programmers to exchange experiences and knowledge.",
-            feature4_title: "Certification",
-            feature4_desc:
-              "Receive market-recognized certificates after completing each course and project.",
-            chat_title: "AI Chat - Young Programmer",
-            chat_subtitle:
-              "Ask your programming questions with our specialized artificial intelligence",
-            chat_header: "Young Programmer Virtual Assistant",
-            chat_welcome:
-              "Hello! I'm the Young Programmer assistant. How can I help you today with your programming questions?",
-            chat_placeholder: "Type your programming question...",
-            chat_send: "Send",
-            footer_title: "Young Programmer",
-            footer_desc:
-              "Your complete platform to learn programming and develop skills for the technology market.",
-            courses_title: "Courses",
-            course1: "Web Development",
-            course2: "JavaScript",
-            course3: "Python",
-            course4: "React",
-            course5: "Node.js",
-            resources_title: "Resources",
-            resource1: "Blog",
-            resource2: "Tutorials",
-            resource3: "Projects",
-            resource4: "Community",
-            resource5: "Support",
-            contact_title: "Contact",
-            copyright: "&copy; 2023 Young Programmer. All rights reserved.",
-            accessibility_title: "Accessibility",
-            high_contrast: "High Contrast",
-            large_text: "Large Text",
-            vlibras_btn: "Activate VLibras",
-          },
-          es: {
-            hero_title: "Tu <span>Viaje</span> de Programación Comienza Aquí",
-            hero_subtitle:
-              "Aprende programación desde cero hasta avanzado con nuestra plataforma interactiva. Cursos, proyectos prácticos y soporte comunitario.",
-            cta_explore: "Explorar Cursos",
-            cta_learn_more: "Saber Más",
-            features_title: "Lo Que Ofrecemos",
-            features_subtitle:
-              "Descubre todos los recursos que impulsarán tu carrera en programación",
-            feature1_title: "Cursos Completos",
-            feature1_desc:
-              "Aprende con cursos estructurados desde básico hasta avanzado en varias tecnologías y lenguajes de programación.",
-            feature2_title: "Proyectos Prácticos",
-            feature2_desc:
-              "Desarrolla proyectos reales que compondrán tu portafolio y te prepararán para el mercado laboral.",
-            feature3_title: "Comunidad Activa",
-            feature3_desc:
-              "Únete a uma comunidad de miles de estudiantes y programadores para intercambiar experiencias y conocimientos.",
-            feature4_title: "Certificación",
-            feature4_desc:
-              "Recibe certificados reconocidos por el mercado después de completar cada curso y proyecto.",
-            chat_title: "Chat IA - Joven Programador",
-            chat_subtitle:
-              "Resuelve tus dudas sobre programación con nuestra inteligencia artificial especializada",
-            chat_header: "Asistente Virtual Joven Programador",
-            chat_welcome:
-              "¡Hola! Soy el asistente de Joven Programador. ¿Cómo puedo ayudarte hoy con tus dudas sobre programación?",
-            chat_placeholder: "Escribe tu pregunta sobre programación...",
-            chat_send: "Enviar",
-            footer_title: "Joven Programador",
-            footer_desc:
-              "Tu plataforma completa para aprender programación y desarrollar habilidades para el mercado tecnológico.",
-            courses_title: "Cursos",
-            course1: "Desarrollo Web",
-            course2: "JavaScript",
-            course3: "Python",
-            course4: "React",
-            course5: "Node.js",
-            resources_title: "Recursos",
-            resource1: "Blog",
-            resource2: "Tutoriales",
-            resource3: "Proyectos",
-            resource4: "Comunidad",
-            resource5: "Soporte",
-            contact_title: "Contacto",
-            copyright:
-              "&copy; 2023 Joven Programador. Todos los derechos reservados.",
-            accessibility_title: "Accesibilidad",
-            high_contrast: "Alto Contraste",
-            large_text: "Texto Grande",
-            vlibras_btn: "Activar VLibras",
-          },
-          it: {
-            hero_title:
-              "Il Tuo <span>Viaggio</span> nella Programmazione Inizia Qui",
-            hero_subtitle:
-              "Impara la programazione da zero a avanzado con la nostra piattaforma interattiva. Corsi, progetti pratici e supporto della comunità.",
-            cta_explore: "Esplora Corsi",
-            cta_learn_more: "Scopri di Più",
-            features_title: "Cosa Offriamo",
-            features_subtitle:
-              "Scopri tutte le risorse che daranno una spinta alla tua carriera nella programazione",
-            feature1_title: "Corsi Completi",
-            feature1_desc:
-              "Impara con corsi strutturati dal livello base a quello avanzado in varie tecnologie e linguaggi di programazione.",
-            feature2_title: "Progetti Pratici",
-            feature2_desc:
-              "Sviluppa progetti reali che comporranno il tuo portfolio e ti prepareranno per il mercato del lavoro.",
-            feature3_title: "Comunità Attiva",
-            feature3_desc:
-              "Unisciti a una comunità di migliaia di studenti e programmatori per scambiare esperienze e conoscenze.",
-            feature4_title: "Certificazione",
-            feature4_desc:
-              "Ricevi certificati riconosciuti dal mercato dopo il completamento di ogni corso e progetto.",
-            chat_title: "Chat IA - Giovane Programmatore",
-            chat_subtitle:
-              "Risolvi i tuoi dubbi sulla programazione con la nostra intelligenza artificiale specializzata",
-            chat_header: "Assistente Virtuale Giovane Programmatore",
-            chat_welcome:
-              "Ciao! Sono l'assistente di Giovane Programmatore. Come posso aiutarti oggi con le tue domande sulla programazione?",
-            chat_placeholder: "Digita la tua domanda sulla programazione...",
-            chat_send: "Invia",
-            footer_title: "Giovane Programmatore",
-            footer_desc:
-              "La tua piattaforma completa per imparare la programazione e sviluppare competenze per il mercato tecnologico.",
-            courses_title: "Cursos",
-            course1: "Sviluppo Web",
-            course2: "JavaScript",
-            course3: "Python",
-            course4: "React",
-            course5: "Node.js",
-            resources_title: "Risorse",
-            resource1: "Blog",
-            resource2: "Tutorial",
-            resource3: "Progetti",
-            resource4: "Comunità",
-            resource5: "Supporto",
-            contact_title: "Contatto",
-            copyright:
-              "&copy; 2023 Giovane Programmatore. Tutti i diritti riservati.",
-            accessibility_title: "Accessibilità",
-            high_contrast: "Alto Contrasto",
-            large_text: "Testo Grande",
-            vlibras_btn: "Attiva VLibras",
-          },
-        };
-
-        // Function to add a message to the chat
-        function addMessage(message, isUser = false) {
-          const messageDiv = document.createElement("div");
-          messageDiv.classList.add("message");
-          messageDiv.classList.add(isUser ? "user-message" : "bot-message");
-          messageDiv.textContent = message;
-          chatMessages.appendChild(messageDiv);
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // ✅ CORREÇÃO: Função para processar input do usuário conectada com o backend Flask
-        async function processInput(input) {
-            console.log('🔄 Enviando para API:', input);
-            
-            try {
-                // ✅ CORRIGIDO: Usando a variável BACKEND_URL
-                const response = await fetch(`${BACKEND_URL}/perguntar`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        pergunta: input  // Usando "pergunta" conforme definido no backend
-                    })
-                });
-
-                console.log('📥 Status da API:', response.status);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('✅ Resposta da API recebida:', data);
-                    return data.resposta;  // Usando "resposta" conforme definido no backend
-                } else {
-                    console.error('❌ Erro na API:', response.status);
-                    throw new Error('API error: ' + response.status);
-                }
-                
-            } catch (error) {
-                console.error('❌ Erro na conexão:', error);
-                
-                // Fallback local se a API falhar
-                const fallbackResponses = {
-                    'python': '🐍 **Curso de Python - Jovem Programador**\n\nOferecemos um curso completo de Python do básico ao avançado! **100% GRATUITO** com certificado!',
-                    'javascript': '⚡ **JavaScript Full Stack - Jovem Programador**\n\nAprenda JavaScript moderno, React e Node.js. **TOTALMENTE GRATUITO**!',
-                    'react': '⚛️ **Curso de React - Jovem Programador**\n\nDomine React.js com projetos reais. **GRATUITO**!',
-                    'node': '🚀 **Curso de Node.js - Jovem Programador**\n\nAprenda backend com Node.js. **100% GRATUITO**!',
-                    'preço': '💰 **TODOS os nossos cursos são GRATUITOS!**\n\nNão cobramos nada!',
-                    'gratuito': '🎯 **Sim, todos os cursos são GRATUITOS!**',
-                    'carreira': '💼 **Carreira em Programação**\n\nNossos cursos preparam você para o mercado!',
-                    'default': '🤖 **Jovem Programador**\n\nPosso ajudar com cursos GRATUITOS de Python, JavaScript, React e Node.js!'
-                };
-
-                for (const keyword in fallbackResponses) {
-                    if (input.toLowerCase().includes(keyword)) {
-                        return fallbackResponses[keyword];
-                    }
-                }
-
-                return fallbackResponses['default'];
-            }
-        }
-
-        // Event listener for send button
-        sendButton.addEventListener("click", async function () {
-          const message = userInput.value.trim();
-          if (message) {
-            addMessage(message, true);
-            userInput.value = "";
-
-            // Simulate thinking time
-            setTimeout(async function () {
-              const response = await processInput(message);
-              addMessage(response);
-            }, 1000);
-          }
-        });
-
-        // Event listener for Enter key
-        userInput.addEventListener("keypress", async function (e) {
-          if (e.key === "Enter") {
-            const message = userInput.value.trim();
-            if (message) {
-              addMessage(message, true);
-              userInput.value = "";
-
-              setTimeout(async function () {
-                const response = await processInput(message);
-                addMessage(response);
-              }, 1000);
-            }
-          }
-        });
-
-        // Language selector functionality
-        languageBtn.addEventListener("click", function () {
-          languageDropdown.classList.toggle("show");
-        });
-
-        // Close language dropdown when clicking outside
-        document.addEventListener("click", function (e) {
-          if (
-            !languageBtn.contains(e.target) &&
-            !languageDropdown.contains(e.target)
-          ) {
-            languageDropdown.classList.remove("show");
-          }
-        });
-
-        // Change language
-        document.querySelectorAll(".language-option").forEach((option) => {
-          option.addEventListener("click", function () {
-            const lang = this.getAttribute("data-lang");
-            changeLanguage(lang);
-            languageDropdown.classList.remove("show");
-
-            // Update active option
-            document.querySelectorAll(".language-option").forEach((opt) => {
-              opt.classList.remove("active");
-              opt.innerHTML = opt.textContent;
-            });
-            this.classList.add("active");
-            this.innerHTML = '<i class="fas fa-check"></i> ' + this.textContent;
-          });
-        });
-
-        // Function to change language
-        function changeLanguage(lang) {
-          currentLanguage.textContent = document.querySelector(
-            `.language-option[data-lang="${lang}"]`
-          ).textContent;
-
-          // Update all translatable elements
-          document.querySelectorAll("[data-translate]").forEach((element) => {
-            const key = element.getAttribute("data-translate");
-            if (translations[lang] && translations[lang][key]) {
-              if (
-                element.tagName === "INPUT" ||
-                element.tagName === "TEXTAREA"
-              ) {
-                element.placeholder = translations[lang][key];
-              } else {
-                element.innerHTML = translations[lang][key];
-              }
-            }
-          });
-        }
-
-        // Accessibility panel toggle
-        accessibilityBtn.addEventListener("click", function () {
-          accessibilityPanel.classList.toggle("open");
-        });
-
-        // VLibras button
-        vlibrasBtn.addEventListener("click", function () {
-          // This would normally trigger the VLibras widget
-          // Since we've already initialized it, we'll just show a message
-          alert(
-            "VLibras ativado! O widget de Libras está disponível no canto inferior esquerdo da tela."
-          );
-        });
-
-        // High contrast toggle
-        document
-          .getElementById("high-contrast")
-          .addEventListener("change", function (e) {
-            if (e.target.checked) {
-              document.body.classList.add("high-contrast");
-            } else {
-              document.body.classList.remove("high-contrast");
-            }
-          });
-
-        // Large text toggle
-        document
-          .getElementById("large-text")
-          .addEventListener("change", function (e) {
-            if (e.target.checked) {
-              document.body.classList.add("large-text");
-              document.documentElement.style.fontSize = "18px";
-              document.body.style.fontSize = "18px";
-              document.body.style.lineHeight = "1.8";
-              document
-                .querySelectorAll("h1, h2, h3, h4, h5, h6")
-                .forEach((el) => {
-                  el.style.fontSize =
-                    "calc(1.2 * " + getComputedStyle(el).fontSize + ")";
-                });
-              document
-                .querySelectorAll("p, span, a, li, button")
-                .forEach((el) => {
-                  el.style.fontSize =
-                    "calc(1.2 * " + getComputedStyle(el).fontSize + ")";
-                });
-              document.querySelectorAll("input, textarea").forEach((el) => {
-                el.style.fontSize =
-                  "calc(1.2 * " + getComputedStyle(el).fontSize + ")";
-                el.style.padding =
-                  "calc(1.2 * " + getComputedStyle(el).padding + ")";
-              });
-            } else {
-              document.body.classList.remove("large-text");
-              document.documentElement.style.fontSize = "";
-              document.body.style.fontSize = "";
-              document.body.style.lineHeight = "";
-              document
-                .querySelectorAll(
-                  "h1, h2, h3, h4, h5, h6, p, span, a, li, button, input, textarea"
-                )
-                .forEach((el) => {
-                  el.style.fontSize = "";
-                });
-              document.querySelectorAll("input, textarea").forEach((el) => {
-                el.style.padding = "";
-              });
-            }
-          });
-
-        // Add CSS for high contrast mode
-        const style = document.createElement("style");
-        style.textContent = `
-                body.high-contrast {
-                    --bg: #000000;
-                    --text: #ffffff;
-                    --text-light: #cccccc;
-                    --card-bg: #222222;
-                    --border: #ffffff;
-                    --primary: #ffff00;
-                    --primary-dark: #cccc00;
-                    --primary-light: #ffff99;
-                }
-            `;
-        document.head.appendChild(style);
-      });
-
-      // Modal Functions
-      function openCoursesModal() {
-        document.getElementById('coursesModal').style.display = 'block';
-      }
-
-      function closeCoursesModal() {
-        document.getElementById('coursesModal').style.display = 'none';
-      }
-
-      function openAboutModal() {
-        document.getElementById('aboutModal').style.display = 'block';
-      }
-
-      function closeAboutModal() {
-        document.getElementById('aboutModal').style.display = 'none';
-      }
-
-      function openSignupModal() {
-        document.getElementById('signupModal').style.display = 'block';
-      }
-
-      function closeSignupModal() {
-        document.getElementById('signupModal').style.display = 'none';
-      }
-
-      function askAboutCourse(course) {
-        closeCoursesModal();
-        const userInput = document.getElementById('userInput');
-        userInput.value = `curso de ${course}`;
-        document.getElementById('sendButton').click();
-      }
-
-      // Close modals when clicking outside
-      window.addEventListener('click', function(e) {
-        const modals = document.querySelectorAll('.modal');
-        modals.forEach(modal => {
-          if (e.target === modal) {
-            modal.style.display = 'none';
-          }
-        });
-      });
-    </script>
-  </body>
-</html> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
