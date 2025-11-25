@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
-    <meta charset="UTF-8" >
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 Chatbot SENAC - Jovem Programador</title>
     <link
       rel="stylesheet"
@@ -542,6 +542,41 @@
         transform: scale(1.1);
       }
 
+      /* ✅ BOTÃO DE ÁUDIO */
+      .audio-btn {
+        position: fixed;
+        bottom: 8rem;
+        right: 2rem;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--gradient);
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s;
+      }
+
+      .audio-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .audio-btn.speaking {
+        background: var(--accent);
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+
       .accessibility-panel {
         position: fixed;
         bottom: 5rem;
@@ -707,6 +742,21 @@
         .chatbot-image img {
           width: 380px;
         }
+
+        /* ✅ AJUSTES MOBILE PARA BOTÕES FLUTUANTES */
+        .audio-btn {
+          bottom: 9rem;
+          right: 1.5rem;
+          width: 55px;
+          height: 55px;
+        }
+
+        .accessibility-btn {
+          bottom: 2rem;
+          right: 1.5rem;
+          width: 55px;
+          height: 55px;
+        }
       }
 
       @media (max-width: 768px) {
@@ -772,6 +822,22 @@
 
         .chatbot-image img {
           width: 280px;
+        }
+
+        .audio-btn {
+          bottom: 8rem;
+          right: 1rem;
+          width: 50px;
+          height: 50px;
+          font-size: 1.2rem;
+        }
+
+        .accessibility-btn {
+          bottom: 1.5rem;
+          right: 1rem;
+          width: 50px;
+          height: 50px;
+          font-size: 1.2rem;
         }
       }
     </style>
@@ -840,7 +906,7 @@
         <div class="chatbot-image">
           <img src="https://a.lovart.ai/artifacts/agent/07L2THA3E0UfSdsr.png"
                alt="404 Chatbot SENAC - Jovem Programador"
-               loading="lazy" >
+               loading="lazy">
         </div>
       </div>
     </section>
@@ -904,6 +970,11 @@
       </div>
     </footer>
 
+    <!-- ✅ BOTÃO DE ÁUDIO -->
+    <button class="audio-btn" id="audioBtn" title="Ativar/Desativar Áudio">
+      <i class="fas fa-volume-mute"></i>
+    </button>
+
     <!-- Accessibility Button -->
     <button class="accessibility-btn" id="accessibilityBtn">
       <i class="fas fa-universal-access"></i>
@@ -913,11 +984,11 @@
     <div class="accessibility-panel" id="accessibilityPanel">
       <h3>Acessibilidade</h3>
       <div class="accessibility-option">
-        <input type="checkbox" id="high-contrast" >
+        <input type="checkbox" id="high-contrast">
         <label for="high-contrast">Alto Contraste</label>
       </div>
       <div class="accessibility-option">
-        <input type="checkbox" id="large-text" >
+        <input type="checkbox" id="large-text">
         <label for="large-text">Texto Grande</label>
       </div>
       <button class="vlibras-btn" id="vlibrasBtn">
@@ -935,38 +1006,369 @@
     </div>
 
     <script>
-      // ✅ DETECTAR SE ESTÁ EM PRODUÇ��O OU LOCAL
+      // ✅ DETECTAR SE ESTÁ EM PRODUÇÃO OU LOCAL
       const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:5000'
         : '';  // Em produção, usa o mesmo domínio (path relativo)
 
       console.log('🔗 Backend URL:', BACKEND_URL || 'Same origin (production)');
 
+      // ✅ VARIÁVEL GLOBAL PARA IDIOMA
+      let currentLanguage = 'pt';
+
+      // ✅ TRADUÇÕES COMPLETAS
+      const translations = {
+        pt: {
+          // Header
+          currentLanguage: "Português",
+          navAssistant: "Assistente Virtual",
+          ctaButton: "Inscreva-se",
+          
+          // Hero
+          notFound: "Not Found",
+          
+          // Chat
+          chatTitle: "Assistente Virtual 404 Not Found",
+          chatPlaceholder: "Digite sua mensagem...",
+          sendButton: "Enviar",
+          sending: "Enviando...",
+          botWelcome: "Olá! Sou o assistente 404 Not Found do Programa Jovem Programador. Como posso ajudar você hoje?",
+          
+          // Footer
+          chatbotTitle: "404 Chatbot SENAC",
+          chatbotDesc: "Programa Jovem Programador - Capacitação tecnológica para jovens de Santa Catarina",
+          contact: "Contato",
+          email: "contato@jovemprogramador.com",
+          phone: "(48) 9999-9999",
+          location: "Santa Catarina - Brasil",
+          copyright: "© 2025 404 Chatbot SENAC - Jovem Programador. Todos os direitos reservados.",
+          
+          // Accessibility
+          accessibility: "Acessibilidade",
+          highContrast: "Alto Contraste",
+          largeText: "Texto Grande",
+          activateVlibras: "Ativar VLibras",
+          vlibrasAlert: "VLibras ativado! O widget de Libras está disponível no canto inferior esquerdo da tela.",
+          
+          // Audio
+          audioEnabled: "Áudio ativado",
+          audioDisabled: "Áudio desativado",
+          audioSpeaking: "Falando..."
+        },
+        
+        en: {
+          // Header
+          currentLanguage: "English",
+          navAssistant: "Virtual Assistant", 
+          ctaButton: "Sign Up",
+          
+          // Hero
+          notFound: "Not Found",
+          
+          // Chat
+          chatTitle: "404 Not Found Virtual Assistant",
+          chatPlaceholder: "Type your message...",
+          sendButton: "Send",
+          sending: "Sending...",
+          botWelcome: "Hello! I'm the 404 Not Found assistant from the Young Programmer Program. How can I help you today?",
+          
+          // Footer
+          chatbotTitle: "404 Chatbot SENAC",
+          chatbotDesc: "Young Programmer Program - Technological training for young people in Santa Catarina",
+          contact: "Contact",
+          email: "contact@jovemprogramador.com", 
+          phone: "(48) 9999-9999",
+          location: "Santa Catarina - Brazil",
+          copyright: "© 2025 404 Chatbot SENAC - Young Programmer. All rights reserved.",
+          
+          // Accessibility
+          accessibility: "Accessibility",
+          highContrast: "High Contrast",
+          largeText: "Large Text",
+          activateVlibras: "Activate VLibras",
+          vlibrasAlert: "VLibras activated! The sign language widget is available in the bottom left corner of the screen.",
+          
+          // Audio
+          audioEnabled: "Audio enabled",
+          audioDisabled: "Audio disabled", 
+          audioSpeaking: "Speaking..."
+        },
+        
+        es: {
+          // Header
+          currentLanguage: "Español",
+          navAssistant: "Asistente Virtual",
+          ctaButton: "Inscribirse",
+          
+          // Hero
+          notFound: "No Encontrado",
+          
+          // Chat
+          chatTitle: "Asistente Virtual 404 No Encontrado", 
+          chatPlaceholder: "Escribe tu mensaje...",
+          sendButton: "Enviar",
+          sending: "Enviando...",
+          botWelcome: "¡Hola! Soy el asistente 404 No Encontrado del Programa Joven Programador. ¿Cómo puedo ayudarte hoy?",
+          
+          // Footer
+          chatbotTitle: "404 Chatbot SENAC",
+          chatbotDesc: "Programa Joven Programador - Capacitación tecnológica para jóvenes de Santa Catarina",
+          contact: "Contacto",
+          email: "contacto@jovemprogramador.com",
+          phone: "(48) 9999-9999", 
+          location: "Santa Catarina - Brasil",
+          copyright: "© 2025 404 Chatbot SENAC - Joven Programador. Todos los derechos reservados.",
+          
+          // Accessibility
+          accessibility: "Accesibilidad",
+          highContrast: "Alto Contraste",
+          largeText: "Texto Grande", 
+          activateVlibras: "Activar VLibras",
+          vlibrasAlert: "¡VLibras activado! El widget de lenguaje de señas está disponible en la esquina inferior izquierda de la pantalla.",
+          
+          // Audio
+          audioEnabled: "Audio activado",
+          audioDisabled: "Audio desactivado",
+          audioSpeaking: "Hablando..."
+        }
+      };
+
+      // ✅ SISTEMA DE SÍNTESE DE VOZ
+      class AudioSystem {
+        constructor() {
+          this.synth = window.speechSynthesis;
+          this.voices = [];
+          this.currentVoice = null;
+          this.isEnabled = false;
+          this.isSpeaking = false;
+          
+          this.loadVoices();
+          
+          // Carregar vozes quando estiverem disponíveis
+          if (this.synth.onvoiceschanged !== undefined) {
+            this.synth.onvoiceschanged = () => this.loadVoices();
+          }
+        }
+
+        loadVoices() {
+          this.voices = this.synth.getVoices();
+          
+          // Selecionar voz padrão baseada no idioma
+          const langMap = {
+            'pt': 'pt-BR',
+            'en': 'en-US', 
+            'es': 'es-ES'
+          };
+          
+          const targetLang = langMap[currentLanguage] || 'pt-BR';
+          this.currentVoice = this.voices.find(voice => 
+            voice.lang.includes(targetLang)
+          ) || this.voices[0];
+          
+          console.log('🎵 Vozes carregadas:', this.voices.length);
+          console.log('🎵 Voz selecionada:', this.currentVoice?.name);
+        }
+
+        speak(text) {
+          if (!this.isEnabled || this.isSpeaking) return;
+          
+          this.stop(); // Para qualquer fala anterior
+          
+          const utterance = new SpeechSynthesisUtterance(text);
+          
+          // Configurar voz
+          if (this.currentVoice) {
+            utterance.voice = this.currentVoice;
+          }
+          
+          // Configurações da voz
+          utterance.rate = 0.9;    // Velocidade (0.1 - 10)
+          utterance.pitch = 1.0;   // Tom (0 - 2)
+          utterance.volume = 1.0;  // Volume (0 - 1)
+          
+          // Eventos
+          utterance.onstart = () => {
+            this.isSpeaking = true;
+            this.updateAudioButton();
+          };
+          
+          utterance.onend = () => {
+            this.isSpeaking = false;
+            this.updateAudioButton();
+          };
+          
+          utterance.onerror = (event) => {
+            console.error('❌ Erro na síntese de voz:', event);
+            this.isSpeaking = false;
+            this.updateAudioButton();
+          };
+          
+          this.synth.speak(utterance);
+        }
+
+        stop() {
+          if (this.synth.speaking) {
+            this.synth.cancel();
+            this.isSpeaking = false;
+            this.updateAudioButton();
+          }
+        }
+
+        toggle() {
+          this.isEnabled = !this.isEnabled;
+          
+          if (!this.isEnabled) {
+            this.stop();
+          }
+          
+          this.updateAudioButton();
+          this.savePreference();
+          
+          // Feedback de áudio
+          if (this.isEnabled) {
+            this.speak(translations[currentLanguage]?.audioEnabled || 'Áudio ativado');
+          }
+          
+          return this.isEnabled;
+        }
+
+        updateAudioButton() {
+          const btn = document.getElementById('audioBtn');
+          const icon = btn?.querySelector('i');
+          
+          if (btn && icon) {
+            if (this.isSpeaking) {
+              btn.classList.add('speaking');
+              icon.className = 'fas fa-volume-up';
+              btn.style.animation = 'pulse 1s infinite';
+            } else if (this.isEnabled) {
+              btn.classList.remove('speaking');
+              icon.className = 'fas fa-volume-up';
+              btn.style.animation = 'none';
+            } else {
+              btn.classList.remove('speaking');
+              icon.className = 'fas fa-volume-mute';
+              btn.style.animation = 'none';
+            }
+          }
+        }
+
+        savePreference() {
+          localStorage.setItem('audioEnabled', this.isEnabled);
+        }
+
+        loadPreference() {
+          const saved = localStorage.getItem('audioEnabled');
+          this.isEnabled = saved === 'true';
+          this.updateAudioButton();
+        }
+
+        // Atualizar voz quando mudar idioma
+        updateVoiceForLanguage(lang) {
+          const langMap = {
+            'pt': 'pt-BR',
+            'en': 'en-US',
+            'es': 'es-ES'
+          };
+          
+          const targetLang = langMap[lang] || 'pt-BR';
+          this.currentVoice = this.voices.find(voice => 
+            voice.lang.includes(targetLang)
+          ) || this.voices[0];
+          
+          console.log('🎵 Voz atualizada para:', this.currentVoice?.name);
+        }
+      }
+
+      // ✅ INSTÂNCIA GLOBAL DO SISTEMA DE ÁUDIO
+      const audioSystem = new AudioSystem();
+
+      // ✅ FUNÇÃO PARA MUDAR IDIOMA
+      function changeLanguage(lang) {
+        currentLanguage = lang;
+        const t = translations[lang];
+        
+        if (!t) return;
+        
+        // ✅ ATUALIZAR HEADER
+        document.getElementById('currentLanguage').textContent = t.currentLanguage;
+        document.querySelector('.nav-links a[href="#chat"]').textContent = t.navAssistant;
+        document.querySelector('.cta-button').textContent = t.ctaButton;
+        document.querySelector('.mobile-cta').textContent = t.ctaButton;
+        
+        // ✅ ATUALIZAR CHAT
+        document.querySelector('.chat-header h3').textContent = t.chatTitle;
+        document.getElementById('userInput').placeholder = t.chatPlaceholder;
+        document.getElementById('sendButton').textContent = t.sendButton;
+        
+        // ✅ ATUALIZAR FOOTER
+        document.querySelector('.footer-column h4').textContent = t.chatbotTitle;
+        document.querySelector('.footer-column p').textContent = t.chatbotDesc;
+        document.querySelectorAll('.footer-column h4')[1].textContent = t.contact;
+        document.querySelector('.footer-column ul li:nth-child(1)').innerHTML = `<i class="fas fa-envelope"></i> ${t.email}`;
+        document.querySelector('.footer-column ul li:nth-child(2)').innerHTML = `<i class="fas fa-phone"></i> ${t.phone}`;
+        document.querySelector('.footer-column ul li:nth-child(3)').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${t.location}`;
+        document.querySelector('.copyright p').textContent = t.copyright;
+        
+        // ✅ ATUALIZAR ACESSIBILIDADE
+        document.querySelector('.accessibility-panel h3').textContent = t.accessibility;
+        document.querySelector('label[for="high-contrast"]').textContent = t.highContrast;
+        document.querySelector('label[for="large-text"]').textContent = t.largeText;
+        document.querySelector('.vlibras-btn span').textContent = t.activateVlibras;
+        
+        // ✅ ATUALIZAR BOTÕES DE IDIOMA ATIVOS
+        document.querySelectorAll('.language-option').forEach(option => {
+          option.classList.remove('active');
+          if (option.getAttribute('data-lang') === lang) {
+            option.classList.add('active');
+            // Adicionar ícone de check apenas se não tiver
+            if (!option.querySelector('.fas.fa-check')) {
+              option.innerHTML = `<i class="fas fa-check"></i> ${option.textContent}`;
+            }
+          } else {
+            // Remover ícone de check
+            option.innerHTML = option.textContent.replace('✓ ', '').replace('✔ ', '');
+          }
+        });
+        
+        // ✅ ATUALIZAR MENSAGEM DE BOAS-VINDAS DO BOT (apenas se for a primeira vez)
+        const chatMessages = document.getElementById('chatMessages');
+        if (chatMessages.children.length === 1) {
+          chatMessages.innerHTML = '';
+          addMessage(t.botWelcome, false);
+        }
+        
+        // ✅ ATUALIZAR SISTEMA DE ÁUDIO
+        audioSystem.updateVoiceForLanguage(lang);
+        
+        console.log(`🌐 Idioma alterado para: ${lang}`);
+      }
+
       // ✅ MENU MOBILE TOGGLE
       const menuToggle = document.getElementById('menuToggle');
       const navLinks = document.getElementById('navLinks');
 
       if (menuToggle && navLinks) {
-          menuToggle.addEventListener('click', function() {
-              navLinks.classList.toggle('active');
-              const icon = menuToggle.querySelector('i');
-              if (navLinks.classList.contains('active')) {
-                  icon.classList.remove('fa-bars');
-                  icon.classList.add('fa-times');
-              } else {
-                  icon.classList.remove('fa-times');
-                  icon.classList.add('fa-bars');
-              }
-          });
+        menuToggle.addEventListener('click', function() {
+          navLinks.classList.toggle('active');
+          const icon = menuToggle.querySelector('i');
+          if (navLinks.classList.contains('active')) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+          } else {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+          }
+        });
 
-          document.querySelectorAll('.nav-links a').forEach(link => {
-              link.addEventListener('click', function() {
-                  navLinks.classList.remove('active');
-                  const icon = menuToggle.querySelector('i');
-                  icon.classList.remove('fa-times');
-                  icon.classList.add('fa-bars');
-              });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+          link.addEventListener('click', function() {
+            navLinks.classList.remove('active');
+            const icon = menuToggle.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
           });
+        });
       }
 
       // ✅ Initialize VLibras
@@ -983,25 +1385,17 @@
         // ✅ Language selector
         const languageBtn = document.getElementById("languageBtn");
         const languageDropdown = document.getElementById("languageDropdown");
-        const currentLanguage = document.getElementById("currentLanguage");
 
         // ✅ Accessibility
         const accessibilityBtn = document.getElementById("accessibilityBtn");
         const accessibilityPanel = document.getElementById("accessibilityPanel");
         const vlibrasBtn = document.getElementById("vlibrasBtn");
 
-        // ✅ Translations
-        const translations = {
-          pt: {
-            currentLanguage: "Português"
-          },
-          en: {
-            currentLanguage: "English"
-          },
-          es: {
-            currentLanguage: "Español"
-          }
-        };
+        // ✅ Audio button
+        const audioBtn = document.getElementById("audioBtn");
+
+        // ✅ CARREGAR PREFERÊNCIAS DE ÁUDIO
+        audioSystem.loadPreference();
 
         // ✅ Função para adicionar mensagem no chat
         function addMessage(message, isUser = false) {
@@ -1011,38 +1405,47 @@
           messageDiv.textContent = message;
           chatMessages.appendChild(messageDiv);
           chatMessages.scrollTop = chatMessages.scrollHeight;
+          
+          // ✅ REPRODUZIR ÁUDIO DA RESPOSTA DO BOT
+          if (!isUser && audioSystem.isEnabled) {
+            audioSystem.speak(message);
+          }
         }
 
         // ✅ FUNÇÃO CORRIGIDA - Processa input do usuário
         async function processInput(input) {
-            console.log('🔄 Enviando para API:', input);
+          console.log('🔄 Enviando para API:', input);
 
-            try {
-                const response = await fetch(BACKEND_URL + '/perguntar', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        pergunta: input
-                    })
-                });
+          try {
+            const response = await fetch(BACKEND_URL + '/perguntar', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                pergunta: input
+              })
+            });
 
-                console.log('📥 Status da API:', response.status);
+            console.log('📥 Status da API:', response.status);
 
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('✅ Resposta da API recebida:', data);
-                    return data.resposta;
-                } else {
-                    console.error('❌ Erro na API:', response.status);
-                    throw new Error('API error: ' + response.status);
-                }
-
-            } catch (error) {
-                console.error('❌ Erro na conexão:', error);
-                return '⚠️ Desculpe, estou com dificuldades para me conectar ao servidor. Por favor, tente novamente em alguns instantes.';
+            if (response.ok) {
+              const data = await response.json();
+              console.log('✅ Resposta da API recebida:', data);
+              return data.resposta;
+            } else {
+              console.error('❌ Erro na API:', response.status);
+              throw new Error('API error: ' + response.status);
             }
+
+          } catch (error) {
+            console.error('❌ Erro na conexão:', error);
+            const t = translations[currentLanguage];
+            return t ? '⚠️ ' + (currentLanguage === 'en' ? 'Sorry, I am having trouble connecting to the server. Please try again in a few moments.' : 
+                             currentLanguage === 'es' ? 'Lo siento, estoy teniendo problemas para conectarme al servidor. Por favor, inténtelo de nuevo en unos momentos.' :
+                             'Desculpe, estou com dificuldades para me conectar ao servidor. Por favor, tente novamente em alguns instantes.') : 
+                             '⚠️ Desculpe, estou com dificuldades para me conectar ao servidor. Por favor, tente novamente em alguns instantes.';
+          }
         }
 
         // ✅ Event listener para botão enviar
@@ -1052,13 +1455,14 @@
             addMessage(message, true);
             userInput.value = "";
             sendButton.disabled = true;
-            sendButton.textContent = "Enviando...";
+            const t = translations[currentLanguage];
+            sendButton.textContent = t ? t.sending : "Enviando...";
 
             const response = await processInput(message);
             addMessage(response);
 
             sendButton.disabled = false;
-            sendButton.textContent = "Enviar";
+            sendButton.textContent = t ? t.sendButton : "Enviar";
           }
         });
 
@@ -1070,13 +1474,14 @@
               addMessage(message, true);
               userInput.value = "";
               sendButton.disabled = true;
-              sendButton.textContent = "Enviando...";
+              const t = translations[currentLanguage];
+              sendButton.textContent = t ? t.sending : "Enviando...";
 
               const response = await processInput(message);
               addMessage(response);
 
               sendButton.disabled = false;
-              sendButton.textContent = "Enviar";
+              sendButton.textContent = t ? t.sendButton : "Enviar";
             }
           }
         });
@@ -1096,30 +1501,16 @@
           }
         });
 
-        // ✅ Change language
+        // ✅ Change language - Desktop
         document.querySelectorAll(".language-option").forEach((option) => {
           option.addEventListener("click", function () {
             const lang = this.getAttribute("data-lang");
             changeLanguage(lang);
             languageDropdown.classList.remove("show");
-
-            document.querySelectorAll(".language-option").forEach((opt) => {
-              opt.classList.remove("active");
-              opt.innerHTML = opt.textContent;
-            });
-            this.classList.add("active");
-            this.innerHTML = '<i class="fas fa-check"></i> ' + this.textContent;
           });
         });
 
-        // ✅ Function to change language
-        function changeLanguage(lang) {
-          if (translations[lang]) {
-            currentLanguage.textContent = translations[lang].currentLanguage;
-          }
-        }
-
-        // ✅ Global function for mobile language selector
+        // ✅ Tornar função global para mobile
         window.changeLanguage = changeLanguage;
 
         // ✅ Accessibility panel toggle
@@ -1129,7 +1520,19 @@
 
         // ✅ VLibras button
         vlibrasBtn.addEventListener("click", function () {
-          showCustomAlert("VLibras ativado! O widget de Libras está disponível no canto inferior esquerdo da tela.");
+          const t = translations[currentLanguage];
+          showCustomAlert(t ? t.vlibrasAlert : "VLibras ativado! O widget de Libras está disponível no canto inferior esquerdo da tela.");
+        });
+
+        // ✅ AUDIO BUTTON EVENT
+        audioBtn.addEventListener("click", function() {
+          const isEnabled = audioSystem.toggle();
+          const t = translations[currentLanguage];
+          
+          // Feedback visual
+          if (isEnabled) {
+            showCustomAlert(t ? t.audioEnabled : "Áudio ativado");
+          }
         });
 
         // ✅ Custom alert function
@@ -1192,1467 +1595,3 @@
     </script>
   </body>
 </html>
-
-
-
-<!-- -->
-
-
-
-
-
-
-<!-- 
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" >
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
-    <title>404 Chatbot SENAC - Jovem Programador</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    >
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
-      defer
-    ></script>
-
-
-    <!- VLibras Oficial ->
-    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-    <style>
-      :root {
-        --primary: #bb6afc;
-        --primary-dark: #8c44fa;
-        --primary-darker: #6a01fc;
-        --secondary: #00d4ff;
-        --accent: #ff6b6b;
-        --gradient: linear-gradient(
-          135deg,
-          var(--primary),
-          var(--primary-dark)
-        );
-        --bg: #1a002b;
-        --bg-light: #24024e;
-        --bg-lighter: #2d0645;
-        --card-bg: rgba(187, 106, 252, 0.08);
-        --text: #ffffff;
-        --text-light: #e2e2e2;
-        --border: rgba(187, 106, 252, 0.3);
-        --shadow: 0 25px 50px rgba(187, 106, 252, 0.15);
-        --glow: 0 0 20px rgba(187, 106, 252, 0.4);
-        --error: #ff6d6d;
-        --success: #4ade80;
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.6;
-        overflow-x: hidden;
-      }
-
-      /* Header */
-      header {
-        background: rgba(26, 0, 43, 0.95);
-        backdrop-filter: blur(10px);
-        position: fixed;
-        width: 100%;
-        z-index: 1000;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 5%;
-        max-width: 1400px;
-        margin: 0 auto;
-        position: relative;
-      }
-
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .logo h1 {
-        font-size: 1.8rem;
-        font-weight: 800;
-        background: var(--gradient);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        text-shadow: 0 3px 15px rgba(187, 106, 252, 0.5);
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 2rem;
-      }
-
-      .nav-links a {
-        color: var(--text-light);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s;
-      }
-
-      .nav-links a:hover {
-        color: var(--primary);
-      }
-
-      /* ✅ BOTÃO MENU HAMBÚRGUER */
-      .menu-toggle {
-        display: none;
-        background: none;
-        border: none;
-        color: var(--text-light);
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 0.5rem;
-      }
-
-      .cta-button {
-        background: var(--gradient);
-        color: white;
-        border: none;
-        padding: 0.7rem 1.5rem;
-        border-radius: 2rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        box-shadow: 0 0 15px rgba(187, 106, 252, 0.5);
-      }
-
-      .cta-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0 20px rgba(187, 106, 252, 0.7);
-      }
-
-      /* ✅ BOTÃO COMEÇAR AGORA PARA MOBILE */
-      .mobile-cta {
-        display: none;
-      }
-
-      /* Language Selector */
-      .language-selector {
-        position: relative;
-        margin-right: 1rem;
-      }
-
-      .language-btn {
-        background: transparent;
-        color: var(--text-light);
-        border: 1px solid var(--border);
-        padding: 0.5rem 1rem;
-        border-radius: 2rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.3s;
-      }
-
-      .language-btn:hover {
-        background: rgba(187, 106, 252, 0.1);
-      }
-
-      .language-dropdown {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background: var(--bg-light);
-        border: 1px solid var(--border);
-        border-radius: 0.5rem;
-        padding: 0.5rem 0;
-        min-width: 150px;
-        display: none;
-        z-index: 1001;
-      }
-
-      .language-dropdown.show {
-        display: block;
-      }
-
-      .language-option {
-        padding: 0.7rem 1rem;
-        cursor: pointer;
-        transition: background 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .language-option:hover {
-        background: rgba(187, 106, 252, 0.1);
-      }
-
-      .language-option.active {
-        color: var(--primary);
-        font-weight: 600;
-      }
-
-      /* Hero Section - Melhorado */
-      .hero {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 100px 5% 50px;
-        background:
-          radial-gradient(
-            circle at 50% 50%,
-            rgba(187, 106, 252, 0.15) 0%,
-            transparent 50%
-          ),
-          linear-gradient(135deg, #1a002b 0%, #24024e 100%);
-        text-align: center;
-        position: relative;
-      }
-
-      .hero-content {
-        max-width: 1000px;
-        margin: 0 auto;
-      }
-
-      .hero-text {
-        margin-bottom: 3rem;
-      }
-
-      .hero-text h2 {
-        font-size: 10rem;
-        font-weight: 800;
-        line-height: 1;
-        margin-bottom: 0.5rem;
-        color: var(--primary);
-        text-shadow: 0 5px 50px var(--primary-dark);
-        letter-spacing: -5px;
-        animation: glowPulse 3s ease-in-out infinite;
-      }
-
-      @keyframes glowPulse {
-        0%, 100% {
-          text-shadow: 0 5px 50px var(--primary-dark);
-        }
-        50% {
-          text-shadow: 0 5px 80px var(--primary), 0 0 30px var(--primary-dark);
-        }
-      }
-
-      .hero-text h3 {
-        font-size: 2.8rem;
-        font-weight: 600;
-        margin-bottom: 2rem;
-        color: var(--text);
-        letter-spacing: -1px;
-      }
-
-      /* Estilo da Imagem do Chatbot - MELHORADO */
-      .chatbot-image {
-        margin: 3rem auto;
-        display: flex;
-        justify-content: center;
-        position: relative;
-        animation: floatImage 6s ease-in-out infinite;
-      }
-
-      @keyframes floatImage {
-        0%, 100% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-20px);
-        }
-      }
-
-      .chatbot-image::before {
-        content: '';
-        position: absolute;
-        width: 120%;
-        height: 120%;
-        background: radial-gradient(circle, rgba(187, 106, 252, 0.3) 0%, transparent 70%);
-        border-radius: 50%;
-        z-index: -1;
-        animation: pulseGlow 4s ease-in-out infinite;
-      }
-
-      @keyframes pulseGlow {
-        0%, 100% {
-          transform: scale(0.95);
-          opacity: 0.5;
-        }
-        50% {
-          transform: scale(1.05);
-          opacity: 0.8;
-        }
-      }
-
-      .chatbot-image img {
-        width: 450px;
-        max-width: 95%;
-        border-radius: 30px;
-        box-shadow:
-          0 10px 60px rgba(187, 106, 252, 0.6),
-          0 0 40px rgba(187, 106, 252, 0.4),
-          inset 0 0 20px rgba(187, 106, 252, 0.1);
-        border: 3px solid var(--primary);
-        transition: all 0.5s ease;
-        position: relative;
-        z-index: 1;
-      }
-
-      .chatbot-image img:hover {
-        transform: scale(1.05) rotateZ(2deg);
-        box-shadow:
-          0 15px 80px rgba(187, 106, 252, 0.8),
-          0 0 60px rgba(187, 106, 252, 0.6);
-      }
-
-      .search-box {
-        margin: 3rem 0;
-      }
-
-      .search-box input {
-        width: 100%;
-        max-width: 500px;
-        padding: 18px 30px;
-        border: 2px solid var(--primary);
-        border-radius: 12px;
-        background: var(--bg-light);
-        color: var(--text);
-        font-size: 1.2rem;
-        outline: none;
-        transition: all 0.3s;
-        font-family: 'Montserrat', sans-serif;
-      }
-
-      .search-box input::placeholder {
-        color: var(--text-light);
-        opacity: 0.8;
-      }
-
-      .search-box input:focus {
-        border-color: var(--primary-dark);
-        box-shadow: 0 0 25px rgba(187, 106, 252, 0.5);
-        transform: translateY(-2px);
-      }
-
-      /* Chat Section */
-      .chat-section {
-        padding: 4rem 5%;
-        background: var(--bg-light);
-        text-align: center;
-      }
-
-      .chat-container {
-        max-width: 800px;
-        margin: 0 auto;
-        background: var(--card-bg);
-        backdrop-filter: blur(10px);
-        border-radius: 1.5rem;
-        overflow: hidden;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow);
-      }
-
-      .chat-header {
-        background: var(--gradient);
-        padding: 1.5rem;
-        text-align: center;
-      }
-
-      .chat-header h3 {
-        font-size: 1.5rem;
-        font-weight: 600;
-      }
-
-      .chat-messages {
-        height: 300px;
-        overflow-y: auto;
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .message {
-        max-width: 80%;
-        padding: 1rem 1.5rem;
-        border-radius: 1.5rem;
-        position: relative;
-        font-size: 1rem;
-      }
-
-      .user-message {
-        align-self: flex-end;
-        background: var(--primary);
-        color: white;
-        border-bottom-right-radius: 0.5rem;
-      }
-
-      .bot-message {
-        align-self: flex-start;
-        background: var(--bg-lighter);
-        border: 1px solid var(--border);
-        border-bottom-left-radius: 0.5rem;
-      }
-
-      .chat-input {
-        display: flex;
-        padding: 1.5rem;
-        border-top: 1px solid var(--border);
-        gap: 1rem;
-      }
-
-      .chat-input input {
-        flex: 1;
-        padding: 1rem 1.5rem;
-        border: 2px solid var(--border);
-        border-radius: 2rem;
-        font-size: 1rem;
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--text);
-        outline: none;
-      }
-
-      .chat-input input:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(187, 106, 252, 0.3);
-      }
-
-      .chat-input button {
-        padding: 1rem 2rem;
-        background: var(--gradient);
-        color: white;
-        border: none;
-        border-radius: 2rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        min-width: 120px;
-      }
-
-      .chat-input button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0 15px rgba(187, 106, 252, 0.5);
-      }
-
-      /* Footer */
-      footer {
-        background: var(--bg);
-        padding: 3rem 5% 2rem;
-        border-top: 1px solid var(--border);
-      }
-
-      .footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 3rem;
-      }
-
-      .footer-column h4 {
-        font-size: 1.2rem;
-        margin-bottom: 1.5rem;
-        color: var(--primary);
-      }
-
-      .footer-column ul {
-        list-style: none;
-      }
-
-      .footer-column ul li {
-        margin-bottom: 0.8rem;
-      }
-
-      .footer-column a {
-        color: var(--text-light);
-        text-decoration: none;
-        transition: color 0.3s;
-      }
-
-      .footer-column a:hover {
-        color: var(--primary);
-      }
-
-      .social-links {
-        display: flex;
-        gap: 1rem;
-        margin-top: 1.5rem;
-      }
-
-      .social-links a {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: var(--card-bg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s;
-      }
-
-      .social-links a:hover {
-        background: var(--primary);
-        transform: translateY(-3px);
-      }
-
-      .copyright {
-        text-align: center;
-        margin-top: 3rem;
-        padding-top: 2rem;
-        border-top: 1px solid var(--border);
-        color: var(--text-light);
-      }
-
-      /* Accessibility */
-      .accessibility-btn {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: var(--gradient);
-        color: white;
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        cursor: pointer;
-        z-index: 1000;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s;
-      }
-
-      .accessibility-btn:hover {
-        transform: scale(1.1);
-      }
-
-      .accessibility-panel {
-        position: fixed;
-        bottom: 5rem;
-        right: 2rem;
-        background: var(--card-bg);
-        backdrop-filter: blur(12px);
-        border-radius: 1rem;
-        padding: 1.5rem;
-        box-shadow: var(--shadow);
-        border: 1px solid var(--border);
-        z-index: 999;
-        width: 300px;
-        transform: translateY(20px);
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s;
-      }
-
-      .accessibility-panel.open {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .accessibility-panel h3 {
-        margin-bottom: 1rem;
-        color: var(--primary);
-      }
-
-      .accessibility-option {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-      }
-
-      .vlibras-btn {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: var(--gradient);
-        color: white;
-        border: none;
-        border-radius: 2rem;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        margin-top: 0.5rem;
-        width: 100%;
-        justify-content: center;
-      }
-
-      /* ✅ SELETOR DE IDIOMAS MOBILE */
-      .mobile-language-selector {
-        padding: 1rem 5%;
-        border-bottom: 1px solid var(--border);
-        display: none;
-      }
-
-      .mobile-language-selector h4 {
-        color: var(--primary);
-        margin-bottom: 0.8rem;
-        font-size: 1rem;
-      }
-
-      .mobile-language-selector .language-option {
-        padding: 0.8rem 1rem;
-        cursor: pointer;
-        transition: background 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        border-radius: 0.5rem;
-        margin-bottom: 0.5rem;
-        color: var(--text-light);
-      }
-
-      .mobile-language-selector .language-option:hover {
-        background: rgba(187, 106, 252, 0.1);
-      }
-
-      .mobile-language-selector .language-option.active {
-        color: var(--primary);
-        font-weight: 600;
-        background: rgba(187, 106, 252, 0.15);
-      }
-
-      /* ✅ RESPONSIVE */
-      @media (max-width: 1024px) {
-        .nav-links {
-          display: none;
-          flex-direction: column;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          width: 100%;
-          background: var(--bg-light);
-          backdrop-filter: blur(20px);
-          border-top: 1px solid var(--border);
-          padding: 1rem 0;
-          gap: 0;
-          z-index: 1001;
-        }
-
-        .nav-links.active {
-          display: flex;
-        }
-
-        .nav-links a {
-          padding: 1rem 5%;
-          border-bottom: 1px solid var(--border);
-          width: 100%;
-          text-align: left;
-        }
-
-        .mobile-cta {
-          display: block;
-          background: var(--gradient);
-          color: white !important;
-          border-radius: 2rem;
-          margin: 1rem;
-          text-align: center;
-          font-weight: 600;
-          padding: 0.8rem 1.5rem;
-          box-shadow: 0 0 15px rgba(187, 106, 252, 0.5);
-        }
-
-        .cta-button {
-          display: none;
-        }
-
-        .language-selector {
-          display: none;
-        }
-
-        .menu-toggle {
-          display: flex;
-        }
-
-        .hero {
-          padding-top: 90px;
-        }
-
-        .mobile-language-selector {
-          display: block;
-        }
-
-        .footer-content {
-          grid-template-columns: 1fr;
-          gap: 2rem;
-          text-align: center;
-        }
-
-        .hero-text h2 {
-          font-size: 8rem;
-        }
-
-        .hero-text h3 {
-          font-size: 2.5rem;
-        }
-
-        .chatbot-image img {
-          width: 380px;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .hero-text h2 {
-          font-size: 6rem;
-        }
-
-        .hero-text h3 {
-          font-size: 2rem;
-        }
-
-        .logo h1 {
-          font-size: 1.3rem;
-        }
-
-        .chat-messages {
-          height: 250px;
-        }
-
-        .message {
-          max-width: 90%;
-        }
-
-        .chat-input {
-          flex-direction: column;
-        }
-
-        .chat-input button {
-          width: 100%;
-        }
-
-        .search-box input {
-          padding: 15px 20px;
-          font-size: 1.1rem;
-        }
-
-        .chatbot-image img {
-          width: 320px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .hero-text h2 {
-          font-size: 4rem;
-        }
-
-        .hero-text h3 {
-          font-size: 1.5rem;
-        }
-
-        .logo h1 {
-          font-size: 1.1rem;
-        }
-
-        .navbar {
-          padding: 0.8rem 1rem;
-        }
-
-        .search-box input {
-          padding: 12px 18px;
-          font-size: 1rem;
-        }
-
-        .chatbot-image img {
-          width: 280px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-     Header 
-    <header>
-      <nav class="navbar">
-        <div class="logo">
-          <i class="fas fa-robot"></i>
-          <h1>404 Chatbot SENAC</h1>
-        </div>
-
-        <button class="menu-toggle" id="menuToggle">
-          <i class="fas fa-bars"></i>
-        </button>
-
-        <div class="nav-links" id="navLinks">
-          <a href="#chat">Assistente Virtual</a>
-
-          <div class="mobile-language-selector">
-            <h4>Idioma/Language</h4>
-            <div class="language-option active" data-lang="pt" onclick="changeLanguage('pt')">
-              <i class="fas fa-check"></i>
-              Português
-            </div>
-            <div class="language-option" data-lang="en" onclick="changeLanguage('en')">
-              English
-            </div>
-            <div class="language-option" data-lang="es" onclick="changeLanguage('es')">
-              Español
-            </div>
-          </div>
-
-          <a href="https://www.jovemprogramador.com.br/inscricoes-jovem-programador/" class="mobile-cta" target="_blank">Inscreva-se</a>
-        </div>
-
-        <div class="language-selector">
-          <button class="language-btn" id="languageBtn">
-            <i class="fas fa-globe"></i>
-            <span id="currentLanguage">Português</span>
-            <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="language-dropdown" id="languageDropdown">
-            <div class="language-option active" data-lang="pt">
-              <i class="fas fa-check"></i>
-              Português
-            </div>
-            <div class="language-option" data-lang="en">English</div>
-            <div class="language-option" data-lang="es">Español</div>
-          </div>
-        </div>
-
-        <button class="cta-button" onclick="window.location.href='https://www.jovemprogramador.com.br/inscricoes-jovem-programador/'">Inscreva-se</button>
-      </nav>
-    </header>
-
-    <!-Hero Section ->
-    <section class="hero" id="home">
-      <div class="hero-content">
-        <div class="hero-text">
-          <h2>404</h2>
-          <h3>Not Found</h3>
-        </div>
-
-        <div class="chatbot-image">
-          <img src="https://a.lovart.ai/artifacts/agent/07L2THA3E0UfSdsr.png"
-               alt="404 Chatbot SENAC - Jovem Programador"
-               loading="lazy" >
-        </div>
-      </div>
-    </section>
-
-    <!-Chat Section ->
-    <section class="chat-section" id="chat">
-      <div class="chat-container">
-        <div class="chat-header">
-          <h3>Assistente Virtual 404 Not Found</h3>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-          <div class="message bot-message">
-            Olá! Sou o assistente 404 Not Found do Programa Jovem Programador. Como posso ajudar você hoje?
-          </div>
-        </div>
-        <div class="chat-input">
-          <input
-            type="text"
-            id="userInput"
-            placeholder="Digite sua mensagem..."
-          >
-          <button id="sendButton">Enviar</button>
-        </div>
-      </div>
-    </section>
-
-    <! Footer >
-    <footer>
-      <div class="footer-content">
-        <div class="footer-column">
-          <h4>404 Chatbot SENAC</h4>
-          <p>Programa Jovem Programador - Capacitação tecnológica para jovens de Santa Catarina</p>
-          <div class="social-links">
-            <a href="https://www.facebook.com/programajovemprogramador" target="_blank" title="Facebook">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="https://www.instagram.com/programa_jovemprogramador/" target="_blank" title="Instagram">
-              <i class="fab fa-instagram"></i>
-            </a>
-            <a href="https://www.tiktok.com/@jovemprogramador_sc" target="_blank" title="TikTok">
-              <i class="fab fa-tiktok"></i>
-            </a>
-            <a href="https://www.linkedin.com/company/programajovemprogramador/" target="_blank" title="LinkedIn">
-              <i class="fab fa-linkedin-in"></i>
-            </a>
-          </div>
-        </div>
-
-        <div class="footer-column">
-          <h4>Contato</h4>
-          <ul>
-            <li><i class="fas fa-envelope"></i> contato@jovemprogramador.com</li>
-            <li><i class="fas fa-phone"></i> (48) 9999-9999</li>
-            <li><i class="fas fa-map-marker-alt"></i> Santa Catarina - Brasil</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="copyright">
-        <p>&copy; 2023 404 Chatbot SENAC - Jovem Programador. Todos os direitos reservados.</p>
-      </div>
-    </footer>
-
-    <!-Accessibility Button ->
-    <button class="accessibility-btn" id="accessibilityBtn">
-      <i class="fas fa-universal-access"></i>
-    </button>
-
-    <!- Accessibility Panel ->
-    <div class="accessibility-panel" id="accessibilityPanel">
-      <h3>Acessibilidade</h3>
-      <div class="accessibility-option">
-        <input type="checkbox" id="high-contrast" >
-        <label for="high-contrast">Alto Contraste</label>
-      </div>
-      <div class="accessibility-option">
-        <input type="checkbox" id="large-text" >
-        <label for="large-text">Texto Grande</label>
-      </div>
-      <button class="vlibras-btn" id="vlibrasBtn">
-        <i class="fas fa-sign-language"></i>
-        <span>Ativar VLibras</span>
-      </button>
-    </div>
-
-    <!- VLibras Widget->
-    <div vw class="enabled">
-      <div vw-access-button class="active"></div>
-      <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-      </div>
-    </div>
-
-    <script>
-      // ✅ MENU MOBILE TOGGLE
-
-      // ✅ MENU MOBILE TOGGLE
-      const menuToggle = document.getElementById('menuToggle');
-      const navLinks = document.getElementById('navLinks');
-
-      if (menuToggle && navLinks) {
-          menuToggle.addEventListener('click', function() {
-              navLinks.classList.toggle('active');
-              const icon = menuToggle.querySelector('i');
-              if (navLinks.classList.contains('active')) {
-                  icon.classList.remove('fa-bars');
-                  icon.classList.add('fa-times');
-              } else {
-                  icon.classList.remove('fa-times');
-                  icon.classList.add('fa-bars');
-              }
-          });
-
-          document.querySelectorAll('.nav-links a').forEach(link => {
-              link.addEventListener('click', function() {
-                  navLinks.classList.remove('active');
-                  const icon = menuToggle.querySelector('i');
-                  icon.classList.remove('fa-times');
-                  icon.classList.add('fa-bars');
-              });
-          });
-      }
-
-      // ✅ Initialize VLibras
-      document.addEventListener("DOMContentLoaded", function () {
-        if (typeof VLibras !== "undefined") {
-          new VLibras.Widget("https://vlibras.gov.br/app");
-        }
-
-        // ✅ URL CORRETA DO BACKEND
-        const BACKEND_URL = 'https://chatbot-jovemprogramador.onrender.com';
-
-        // ✅ Elementos do chat
-        const chatMessages = document.getElementById("chatMessages");
-        const userInput = document.getElementById("userInput");
-        const sendButton = document.getElementById("sendButton");
-
-        // ✅ Language selector
-        const languageBtn = document.getElementById("languageBtn");
-        const languageDropdown = document.getElementById("languageDropdown");
-        const currentLanguage = document.getElementById("currentLanguage");
-
-        // ✅ Accessibility
-        const accessibilityBtn = document.getElementById("accessibilityBtn");
-        const accessibilityPanel = document.getElementById("accessibilityPanel");
-        const vlibrasBtn = document.getElementById("vlibrasBtn");
-
-        // ✅ Translations
-        const translations = {
-          pt: {
-            currentLanguage: "Português"
-          },
-          en: {
-            currentLanguage: "English"
-          },
-          es: {
-            currentLanguage: "Español"
-          }
-        };
-
-        // ✅ Função para adicionar mensagem no chat
-        function addMessage(message, isUser = false) {
-          const messageDiv = document.createElement("div");
-          messageDiv.classList.add("message");
-          messageDiv.classList.add(isUser ? "user-message" : "bot-message");
-          messageDiv.textContent = message;
-          chatMessages.appendChild(messageDiv);
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // ✅ FUNÇÃO CORRIGIDA - Processa input do usuário
-        async function processInput(input) {
-            console.log('🔄 Enviando para API:', input);
-
-            try {
-                // ✅ URL CORRETA - Backend no Render
-                const response = await fetch(BACKEND_URL + '/perguntar', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        pergunta: input
-                    })
-                });
-
-                console.log('📥 Status da API:', response.status);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('✅ Resposta da API recebida:', data);
-                    return data.resposta;
-                } else {
-                    console.error('❌ Erro na API:', response.status);
-                    throw new Error('API error: ' + response.status);
-                }
-                
-            } catch (error) {
-                console.error('❌ Erro na conexão:', error);
-                
-                // ✅ Fallback local se a API falhar
-                const fallbackResponses = {
-                    'python': '🐍 **Curso de Python - Jovem Programador**\n\nOferecemos um curso completo de Python do básico ao avançado! **100% GRATUITO** com certificado! 🎓',
-                    'javascript': '⚡ **JavaScript Full Stack - Jovem Programador**\n\nAprenda JavaScript moderno, React e Node.js. **TOTALMENTE GRATUITO**! 🚀',
-                    'inscriç': '📝 **Inscrições Jovem Programador**\n\nPara se inscrever, visite: www.jovemprogramador.com.br\n📍 **Santa Catarina - Brasil**',
-                    'senac': '🏫 **SENAC - Jovem Programador**\n\nPrograma de capacitação tecnológica para jovens de Santa Catarina! 💻',
-                    '404': '🔍 **404 Not Found**\n\nMas não se preocupe! Posso ajudar com informações sobre o Programa Jovem Programador! 😊',
-                    'oi': '👋 **Olá! Sou o assistente 404 Not Found**\n\nPosso ajudar com informações sobre o Programa Jovem Programador! 🎯',
-                    'olá': '👋 **Olá! Sou o assistente 404 Not Found**\n\nPosso ajudar com informações sobre o Programa Jovem Programador! 🎯',
-                    'ola': '👋 **Olá! Sou o assistente 404 Not Found**\n\nPosso ajudar com informações sobre o Programa Jovem Programador! 🎯',
-                    'default': '🤖 **404 Chatbot SENAC - Jovem Programador**\n\nPosso ajudar com informações sobre cursos gratuitos de programação! Digite "Python", "JavaScript" ou "inscrições" para saber mais! 🎯'
-                };
-
-                for (const keyword in fallbackResponses) {
-                    if (input.toLowerCase().includes(keyword)) {
-                        return fallbackResponses[keyword];
-                    }
-                }
-
-                return fallbackResponses['default'];
-            }
-        }
-
-        // ✅ Event listener para botão enviar
-        sendButton.addEventListener("click", async function () {
-          const message = userInput.value.trim();
-          if (message) {
-            addMessage(message, true);
-            userInput.value = "";
-
-            // Simula tempo de processamento
-            setTimeout(async function () {
-              const response = await processInput(message);
-              addMessage(response);
-            }, 1000);
-          }
-        });
-
-        // ✅ Event listener para tecla Enter
-        userInput.addEventListener("keypress", async function (e) {
-          if (e.key === "Enter") {
-            const message = userInput.value.trim();
-            if (message) {
-              addMessage(message, true);
-              userInput.value = "";
-
-              setTimeout(async function () {
-                const response = await processInput(message);
-                addMessage(response);
-              }, 1000);
-            }
-          }
-        });
-
-        // ✅ Language selector functionality
-        languageBtn.addEventListener("click", function () {
-          languageDropdown.classList.toggle("show");
-        });
-
-        // ✅ Close language dropdown when clicking outside
-        document.addEventListener("click", function (e) {
-          if (
-            !languageBtn.contains(e.target) &&
-            !languageDropdown.contains(e.target)
-          ) {
-            languageDropdown.classList.remove("show");
-          }
-        });
-
-        // ✅ Change language
-        document.querySelectorAll(".language-option").forEach((option) => {
-          option.addEventListener("click", function () {
-            const lang = this.getAttribute("data-lang");
-            changeLanguage(lang);
-            languageDropdown.classList.remove("show");
-
-            document.querySelectorAll(".language-option").forEach((opt) => {
-              opt.classList.remove("active");
-              opt.innerHTML = opt.textContent;
-            });
-            this.classList.add("active");
-            this.innerHTML = '<i class="fas fa-check"></i> ' + this.textContent;
-          });
-        });
-
-        // ✅ Function to change language
-        function changeLanguage(lang) {
-          if (translations[lang]) {
-            currentLanguage.textContent = translations[lang].currentLanguage;
-          }
-        }
-
-        // ✅ Global function for mobile language selector
-        window.changeLanguage = changeLanguage;
-
-        // ✅ Accessibility panel toggle
-        accessibilityBtn.addEventListener("click", function () {
-          accessibilityPanel.classList.toggle("open");
-        });
-
-        // ✅ VLibras button
-        vlibrasBtn.addEventListener("click", function () {
-          showCustomAlert("VLibras ativado! O widget de Libras está disponível no canto inferior esquerdo da tela.");
-        });
-
-        // ✅ Custom alert function
-        function showCustomAlert(message) {
-          const modal = document.createElement('div');
-          modal.className = 'fixed-modal';
-          modal.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 9999;';
-          modal.innerHTML = `
-            <div style="background: var(--bg-light); padding: 2rem; border-radius: 1rem; max-width: 400px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid var(--border);">
-              <p style="color: var(--text); margin-bottom: 1.5rem; line-height: 1.6;">${message}</p>
-              <button onclick="this.closest('.fixed-modal').remove()" style="background: var(--gradient); color: white; border: none; padding: 0.75rem 2rem; border-radius: 2rem; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.3s;">
-                OK
-              </button>
-            </div>
-          `;
-          document.body.appendChild(modal);
-          modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-              modal.remove();
-            }
-          });
-        }
-
-        // ✅ High contrast toggle
-        document.getElementById("high-contrast").addEventListener("change", function (e) {
-          if (e.target.checked) {
-            document.body.classList.add("high-contrast");
-          } else {
-            document.body.classList.remove("high-contrast");
-          }
-        });
-
-        // ✅ Large text toggle
-        document.getElementById("large-text").addEventListener("change", function (e) {
-          if (e.target.checked) {
-            document.body.classList.add("large-text");
-            document.documentElement.style.fontSize = "18px";
-          } else {
-            document.body.classList.remove("large-text");
-            document.documentElement.style.fontSize = "";
-          }
-        });
-
-        // ✅ Add CSS for high contrast mode
-        const style = document.createElement("style");
-        style.textContent = `
-          body.high-contrast {
-            --bg: #000000;
-            --text: #ffffff;
-            --text-light: #cccccc;
-            --card-bg: #222222;
-            --border: #ffffff;
-            --primary: #ffff00;
-            --primary-dark: #cccc00;
-            --primary-light: #ffff99;
-          }
-        `;
-        document.head.appendChild(style);
-      });
-      // const menuToggle = document.getElementById('menuToggle');
-      // const navLinks = document.getElementById('navLinks');
-
-      // if (menuToggle && navLinks) {
-      //     menuToggle.addEventListener('click', function() {
-      //         navLinks.classList.toggle('active');
-      //         const icon = menuToggle.querySelector('i');
-      //         if (navLinks.classList.contains('active')) {
-      //             icon.classList.remove('fa-bars');
-      //             icon.classList.add('fa-times');
-      //         } else {
-      //             icon.classList.remove('fa-times');
-      //             icon.classList.add('fa-bars');
-      //         }
-      //     });
-
-      //     document.querySelectorAll('.nav-links a').forEach(link => {
-      //         link.addEventListener('click', function() {
-      //             navLinks.classList.remove('active');
-      //             const icon = menuToggle.querySelector('i');
-      //             icon.classList.remove('fa-times');
-      //             icon.classList.add('fa-bars');
-      //         });
-      //     });
-      // }
-
-      // // Initialize VLibras
-      // document.addEventListener("DOMContentLoaded", function () {
-      //   if (typeof VLibras !== "undefined") {
-      //     new VLibras.Widget("https://vlibras.gov.br/app");
-      //   }
-      //   const BACKEND_URL = 'https://chatbot-jovemprogramador.onrender.com';
-      //   // const BACKEND_URL = 'http://localhost:5000';
-
-      //   // Chat functionality
-      //   const chatMessages = document.getElementById("chatMessages");
-      //   const userInput = document.getElementById("userInput");
-      //   const sendButton = document.getElementById("sendButton");
-
-      //   // Language selector
-      //   const languageBtn = document.getElementById("languageBtn");
-      //   const languageDropdown = document.getElementById("languageDropdown");
-      //   const currentLanguage = document.getElementById("currentLanguage");
-
-      //   // Accessibility
-      //   const accessibilityBtn = document.getElementById("accessibilityBtn");
-      //   const accessibilityPanel = document.getElementById("accessibilityPanel");
-      //   const vlibrasBtn = document.getElementById("vlibrasBtn");
-
-      //   // Translations
-      //   const translations = {
-      //     pt: {
-      //       currentLanguage: "Português"
-      //     },
-      //     en: {
-      //       currentLanguage: "English"
-      //     },
-      //     es: {
-      //       currentLanguage: "Español"
-      //     }
-      //   };
-
-      //   // Function to add a message to the chat
-      //   function addMessage(message, isUser = false) {
-      //     const messageDiv = document.createElement("div");
-      //     messageDiv.classList.add("message");
-      //     messageDiv.classList.add(isUser ? "user-message" : "bot-message");
-      //     messageDiv.textContent = message;
-      //     chatMessages.appendChild(messageDiv);
-      //     chatMessages.scrollTop = chatMessages.scrollHeight;
-      //   }
-
-      //   // ✅ Função para processar input do usuário
-      //   async function processInput(input) {
-      //       console.log('🔄 Enviando para API:', input);
-
-      //       try {
-      //           const response = await fetch(`${BACKEND_URL}/perguntar`, {
-      //               method: 'POST',
-      //               headers: {
-      //                   'Content-Type': 'application/json',
-      //               },
-      //               body: JSON.stringify({
-      //                   pergunta: input
-      //               })
-      //           });
-
-      //           if (response.ok) {
-      //               const data = await response.json();
-      //               return data.resposta;
-      //           } else {
-      //               throw new Error('API error: ' + response.status);
-      //           }
-
-      //       } catch (error) {
-      //           console.error('❌ Erro na conexão:', error);
-
-      //           const fallbackResponses = {
-      //               'python': '🐍 **Curso de Python - Jovem Programador**\n\nOferecemos um curso completo de Python!',
-      //               'javascript': '⚡ **JavaScript Full Stack - Jovem Programador**\n\nAprenda JavaScript moderno!',
-      //               'inscriç': '📝 **Inscrições Jovem Programador**\n\nPara se inscrever, visite: www.jovemprogramador.com.br',
-      //               'default': '🤖 **404 Chatbot SENAC**\n\nPosso ajudar com informações sobre o Programa Jovem Programador!'
-      //           };
-
-      //           for (const keyword in fallbackResponses) {
-      //               if (input.toLowerCase().includes(keyword)) {
-      //                   return fallbackResponses[keyword];
-      //               }
-      //           }
-
-      //           return fallbackResponses['default'];
-      //       }
-      //   }
-
-      //   // Event listener for send button
-      //   sendButton.addEventListener("click", async function () {
-      //     const message = userInput.value.trim();
-      //     if (message) {
-      //       addMessage(message, true);
-      //       userInput.value = "";
-
-      //       setTimeout(async function () {
-      //         const response = await processInput(message);
-      //         addMessage(response);
-      //       }, 1000);
-      //     }
-      //   });
-
-      //   // Event listener for Enter key
-      //   userInput.addEventListener("keypress", async function (e) {
-      //     if (e.key === "Enter") {
-      //       const message = userInput.value.trim();
-      //       if (message) {
-      //         addMessage(message, true);
-      //         userInput.value = "";
-
-      //         setTimeout(async function () {
-      //           const response = await processInput(message);
-      //           addMessage(response);
-      //         }, 1000);
-      //       }
-      //     }
-      //   });
-
-      //   // Language selector functionality
-      //   languageBtn.addEventListener("click", function () {
-      //     languageDropdown.classList.toggle("show");
-      //   });
-
-      //   // Close language dropdown when clicking outside
-      //   document.addEventListener("click", function (e) {
-      //     if (
-      //       !languageBtn.contains(e.target) &&
-      //       !languageDropdown.contains(e.target)
-      //     ) {
-      //       languageDropdown.classList.remove("show");
-      //     }
-      //   });
-
-      //   // Change language
-      //   document.querySelectorAll(".language-option").forEach((option) => {
-      //     option.addEventListener("click", function () {
-      //       const lang = this.getAttribute("data-lang");
-      //       changeLanguage(lang);
-      //       languageDropdown.classList.remove("show");
-
-      //       document.querySelectorAll(".language-option").forEach((opt) => {
-      //         opt.classList.remove("active");
-      //         opt.innerHTML = opt.textContent;
-      //       });
-      //       this.classList.add("active");
-      //       this.innerHTML = '<i class="fas fa-check"></i> ' + this.textContent;
-      //     });
-      //   });
-
-      //   // Function to change language
-      //   function changeLanguage(lang) {
-      //     currentLanguage.textContent = translations[lang].currentLanguage;
-      //   }
-
-      //   // Accessibility panel toggle
-      //   accessibilityBtn.addEventListener("click", function () {
-      //     accessibilityPanel.classList.toggle("open");
-      //   });
-
-      //   // VLibras button
-      //   vlibrasBtn.addEventListener("click", function () {
-      //     showCustomAlert("VLibras ativado! O widget de Libras está disponível no canto inferior esquerdo da tela.");
-      //   });
-
-      //   // Custom alert function
-      //   function showCustomAlert(message) {
-      //     const modal = document.createElement('div');
-      //     modal.className = 'fixed-modal';
-      //     modal.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 9999;';
-      //     modal.innerHTML = `
-      //       <div style="background: var(--bg-light); padding: 2rem; border-radius: 1rem; max-width: 400px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid var(--border);">
-      //         <p style="color: var(--text); margin-bottom: 1.5rem; line-height: 1.6;">${message}</p>
-      //         <button onclick="this.closest('.fixed-modal').remove()" style="background: var(--gradient); color: white; border: none; padding: 0.75rem 2rem; border-radius: 2rem; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.3s;">
-      //           OK
-      //         </button>
-      //       </div>
-      //     `;
-      //     document.body.appendChild(modal);
-      //     modal.addEventListener('click', function(e) {
-      //       if (e.target === modal) {
-      //         modal.remove();
-      //       }
-      //     });
-      //   }
-
-      //   // High contrast toggle
-      //   document.getElementById("high-contrast").addEventListener("change", function (e) {
-      //     if (e.target.checked) {
-      //       document.body.classList.add("high-contrast");
-      //     } else {
-      //       document.body.classList.remove("high-contrast");
-      //     }
-      //   });
-
-      //   // Large text toggle
-      //   document.getElementById("large-text").addEventListener("change", function (e) {
-      //     if (e.target.checked) {
-      //       document.body.classList.add("large-text");
-      //       document.documentElement.style.fontSize = "18px";
-      //     } else {
-      //       document.body.classList.remove("large-text");
-      //       document.documentElement.style.fontSize = "";
-      //     }
-      //   });
-
-      //   // Add CSS for high contrast mode
-      //   const style = document.createElement("style");
-      //   style.textContent = `
-      //     body.high-contrast {
-      //       --bg: #000000;
-      //       --text: #ffffff;
-      //       --text-light: #cccccc;
-      //       --card-bg: #222222;
-      //       --border: #ffffff;
-      //       --primary: #ffff00;
-      //       --primary-dark: #cccc00;
-      //       --primary-light: #ffff99;
-      //     }
-      //   `;
-      //   document.head.appendChild(style);
-      // });
-    </script>
-  </body>
-</html>
- -->
-
